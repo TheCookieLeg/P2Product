@@ -19,7 +19,6 @@ public class LevelButtons : MonoBehaviour {
         //stars = COMPLETEDLEVELSTARS SOMETHING;
 
         if (1 >= levelID){ // 1 Skal være det level man er kommet til
-            Debug.Log("Beat level: " + levelID);
             lockedButton.SetActive(false);
             unlockedButton.SetActive(true);
             for (int i = 0; i < 3; i++){
@@ -32,7 +31,6 @@ public class LevelButtons : MonoBehaviour {
                 }
             }
         } else {
-            Debug.Log("Haven't beaten level: " + levelID);
             lockedButton.SetActive(true);
             unlockedButton.SetActive(false);
         }
