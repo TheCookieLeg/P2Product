@@ -33,21 +33,17 @@ public class Dragging : MonoBehaviour
             // TouchPhase.Began is the first frame that the finger touches the screen. Here we can calculate some values
             if (touch.phase == TouchPhase.Began)
             {
-                Debug.Log("TouchPhase.Began");
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                Vector2 touchWorldPos2D = Camera.main.ScreenToWorldPoint(touch.position);
+                RaycastHit2D hit = Physics2D.Raycast(touchWorldPos2D, Vector2.zero);
 
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit) && hit.transform == transform)
+                if (hit.collider != null && hit.transform == transform)
                 {
-                    Debug.Log("Raycast stuff");
                     isDragging = true;
-                    offset = transform.position - touchPosition;
+                    offset = transform.position - (Vector3)touchWorldPos2D;
                 }
             }
             else if (touch.phase == TouchPhase.Moved && isDragging)
             {
-                Debug.Log(touchPosition);
                 transform.position = new Vector3(touchPosition.x + offset.x, touchPosition.y + offset.y, touchPosition.z + offset.z);
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
