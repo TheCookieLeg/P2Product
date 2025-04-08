@@ -20,7 +20,7 @@ public class LevelButtons : MonoBehaviour {
     private Button button;
     private bool unlocked = false;
 
-    private void Awake(){
+    private void Start(){
         if (levelID == 0){ // Hvis man ikke har sat ID'et op endnu
             Debug.LogWarning("Level ID'et er ikke sat op endnu");
             return;
