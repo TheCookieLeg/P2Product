@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
-[CreateAssetMenu(fileName = "New Quiz Question", menuName = "Quiz/Question")]
-public class QuizLevelSO : ScriptableObject {
+[CreateAssetMenu(fileName = "New Quiz Question", menuName = "Levels/Quiz")]
+public class QuizLevelSO : BaseLevelSO {
 
     [System.Serializable]
     public class Question{

@@ -16,78 +16,71 @@ public class QuizUI : MonoBehaviour {
     [SerializeField] private GameObject video;
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private TextMeshProUGUI starsText;
+    [SerializeField] private Button backButton;
     [SerializeField] private Button[] answerButtons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
 
     private int currentQuestionIndex = 0;
 
     private void Awake(){
-        // Initialiserer knapper
         for (int i = 0; i < answerButtons.Length; i++){
-            int index = i; // Sådan alle knapper ikke bruger det højeste i
+            int index = i;
 
-            // Tilføjer en klik funktion til hver knap
             answerButtons[i].onClick.AddListener(() =>{
-                if (OnAnswerSelected(index)){ // Hvis man svarer korrekt
-                    Debug.Log("Correct");
-
+                if (OnAnswerSelected(index)){
                     currentQuestionIndex++;
 
-                    if (currentQuestionIndex < quizData.questions.Count){ // Hvis der er flere spørgsmål
+                    if (currentQuestionIndex < quizData.questions.Count){
                         DisplayCurrentQuestion();
-                    } else { // Hvis der ikke er flere spørgsmål
+                    } else {
                         GameManager.Instance.CompleteLevel();
                     }
-                } else { // Hvis man svarer forkert
-                    Debug.Log("Wrong");
+                } else {
                     GameManager.Instance.stars--;
                     starsText.text = "Stars: " + GameManager.Instance.stars;
 
-                    if (GameManager.Instance.stars <= 0){ // Hvis man løber tør for stjerner (liv)
+                    if (GameManager.Instance.stars <= 0){
                         GameManager.Instance.FailLevel();
                     }
                 }
+            });
+
+            backButton.onClick.AddListener(() => {
+                GameManager.Instance.FailLevel();
             });
         }
     }
 
     private void Start(){
-        // Subscriber til events
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
         GameManager.Instance.OnExitLevel += GameManager_OnExitLevel;
 
-        // Slår denne UI fra til at starte med
         Hide();
     }
 
     private void OnDestroy(){
-        // Unsubscriber til events når GameObjectet bliver ødelagt (Sker aldrig, medmindre vi skifter scene/selv sletter dette GameObject)
         GameManager.Instance.OnEnterLevel -= GameManager_OnEnterLevel;
         GameManager.Instance.OnExitLevel -= GameManager_OnExitLevel;
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        // Når vi går fra GameScene til Quiz scenen
+        if (GameManager.Instance.currentLevelQuizData == null) return;
 
-        // Viser denne side når vi vælger et level
+        quizData = GameManager.Instance.currentLevelQuizData;
+
         Show();
 
-        // Nulstiller variabler
         currentQuestionIndex = 0;
         GameManager.Instance.stars = 3;
         starsText.text = "Stars: " + GameManager.Instance.stars;
-
-        // Viser første spørgsmål da currentQuestionIndex er 0
         DisplayCurrentQuestion();
     }
 
     private void GameManager_OnExitLevel(object sender, EventArgs e){
-        // Slår denne side fra når vi vinder/taber
         Hide();
     }
 
     private void DisplayCurrentQuestion(){
-        // Opdatere tekst + video
         var question = quizData.questions[currentQuestionIndex];
 
         questionText.text = question.questionText;
@@ -106,7 +99,7 @@ public class QuizUI : MonoBehaviour {
         }
     }
 
-    private bool OnAnswerSelected(int selectedIndex){ // Return funktion til at finde det rigtige svar
+    private bool OnAnswerSelected(int selectedIndex){
         if (currentQuestionIndex >= quizData.questions.Count){
             Debug.LogWarning("No more questions available.");
             return false;
@@ -117,12 +110,10 @@ public class QuizUI : MonoBehaviour {
     }
 
     private void Hide(){
-        // Slår siden fra
         gameObject.SetActive(false);
     }
 
     private void Show(){
-        // Slår siden til
         gameObject.SetActive(true);
     }
 }

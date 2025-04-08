@@ -25,8 +25,8 @@ RectTransform:
   m_GameObject: {fileID: 321643936369599515}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3537294057855348913}
   - {fileID: 1605647590129043944}
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 175}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &322800259896394177
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.34509805, g: 0.30980393, b: 0.26666668, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ff6252adc157c4d1794c9b74010fa21a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 49911b88e95674be29a71da21733348b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -213,11 +213,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.75741667, g: 0.8962264, b: 0.5960751, a: 1}
-    m_HighlightedColor: {r: 0.75686276, g: 0.8980392, b: 0.59607846, a: 1}
-    m_PressedColor: {r: 0.90075964, g: 1, b: 0.7877358, a: 1}
-    m_SelectedColor: {r: 0.75686276, g: 0.8980392, b: 0.59607846, a: 1}
-    m_DisabledColor: {r: 0.75686276, g: 0.8980392, b: 0.59607846, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.5411765, g: 0.5411765, b: 0.5411765, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -378,7 +378,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ff6252adc157c4d1794c9b74010fa21a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 66aa7afb883de467fa05e9d9f98f78df, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -409,11 +409,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0.5613208, b: 0.5613208, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.56078434, b: 0.56078434, a: 1}
-    m_PressedColor: {r: 1, g: 0.759434, b: 0.759434, a: 1}
-    m_SelectedColor: {r: 1, g: 0.56078434, b: 0.56078434, a: 1}
-    m_DisabledColor: {r: 1, g: 0.56078434, b: 0.56078434, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.5411765, g: 0.5411765, b: 0.5411765, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -530,9 +530,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelID: 8
-  quizData: {fileID: 0}
+  levelData: {fileID: 0}
   lockedButton: {fileID: 1473627031378066886}
   unlockedButton: {fileID: 465224166554869388}
+  levelTypeText: {fileID: 8406631784986142881}
   starsIcons:
   - {fileID: 3740919597523129684}
   - {fileID: 321643936369599515}
@@ -571,7 +572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -150, y: 125}
+  m_AnchoredPosition: {x: -125, y: 125}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4912366015498639743
@@ -833,7 +834,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 150, y: 125}
+  m_AnchoredPosition: {x: 125, y: 125}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6523523331214298914
@@ -923,7 +924,7 @@ GameObject:
   - component: {fileID: 2168321257618597464}
   - component: {fileID: 8406631784986142881}
   m_Layer: 0
-  m_Name: LevelTitleText
+  m_Name: LevelTypeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -976,7 +977,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TYPE
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
