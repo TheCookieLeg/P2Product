@@ -78,7 +78,8 @@ public class MatchUI : MonoBehaviour {
             firstSelectedButtonIndex = index;
             buttons[index].GetComponent<Image>().color = Color.green;
         } else if (firstSelectedButtonIndex == index){
-            Debug.Log("You clicked the same button twice!");
+            firstSelectedButtonIndex = -1;
+            buttons[index].GetComponent<Image>().color = Color.white;
         } else {
             int matchA = firstSelectedButtonIndex;
             int matchB = index;
