@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c28ff23249d4514e981c39a038c1532, type: 3}
   m_Name: QuizTest
   m_EditorClassIdentifier: 
+  levelName: 
   questions:
   - questionText: who dis?
     videoClip: {fileID: 32900000, guid: c5c90bb0f4db69043980059f153990d0, type: 3}
@@ -21,11 +22,11 @@ MonoBehaviour:
     - Rick Astley
     - Elvis Presley
     correctAnswerIndex: 3
-  - questionText: "Sp\xF8rgsm\xE5l 2"
+  - questionText: "V\xE6lg den rigtige knap"
     videoClip: {fileID: 0}
     answers:
-    - this
-    - hej
-    - hej
-    - hej
+    - Den her
+    - Den her?
+    - "M\xE5ske den her?"
+    - Eller den her?
     correctAnswerIndex: 1

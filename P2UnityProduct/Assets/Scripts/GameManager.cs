@@ -8,8 +8,9 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
     public event EventHandler OnEnterLevel;
-    public event EventHandler OnExitLevel;
+    public event EventHandler OnExitToGameScene;
     public event EventHandler OnRefreshLevels;
+    public event EventHandler OnEnterProfile;
 
     public int currentLevelID;
     public QuizLevelSO currentLevelQuizData;
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void CompleteLevel(){
-        OnExitLevel?.Invoke(this, EventArgs.Empty);
+        OnExitToGameScene?.Invoke(this, EventArgs.Empty);
 
         if (currentLevelID - 1 == levelsCompleted){
             levelsCompleted++;
@@ -61,9 +62,13 @@ public class GameManager : MonoBehaviour {
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
     }
 
-    public void FailLevel(){
-        OnExitLevel?.Invoke(this, EventArgs.Empty);
+    public void BackToGameScene(){
+        OnExitToGameScene?.Invoke(this, EventArgs.Empty);
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void EnterProfile(){
+        OnEnterProfile?.Invoke(this, EventArgs.Empty);
     }
 
     public void RestartProgress(){

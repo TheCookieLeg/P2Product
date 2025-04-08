@@ -26,20 +26,19 @@ public class MatchUI : MonoBehaviour {
         }
 
         backButton.onClick.AddListener(() => {
-            GameManager.Instance.FailLevel();
+            GameManager.Instance.BackToGameScene();
+            Hide();
         });
     }
 
     private void Start(){
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
-        GameManager.Instance.OnExitLevel += GameManager_OnExitLevel;
 
         Hide();
     }
 
     private void OnDestroy(){
         GameManager.Instance.OnEnterLevel -= GameManager_OnEnterLevel;
-        GameManager.Instance.OnExitLevel -= GameManager_OnExitLevel;
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
@@ -53,10 +52,6 @@ public class MatchUI : MonoBehaviour {
         GameManager.Instance.stars = 3;
         starsText.text = "Stars: " + GameManager.Instance.stars;
         LoadQuestion(currentQuestionIndex);
-    }
-
-    private void GameManager_OnExitLevel(object sender, EventArgs e){
-        Hide();
     }
 
     private void LoadQuestion(int index){
@@ -103,6 +98,7 @@ public class MatchUI : MonoBehaviour {
                         LoadQuestion(currentQuestionIndex);
                     } else {
                         GameManager.Instance.CompleteLevel();
+                        Hide();
                     }
                 }
             } else {
@@ -111,6 +107,10 @@ public class MatchUI : MonoBehaviour {
 
                 GameManager.Instance.stars--;
                 starsText.text = "Stars: " + GameManager.Instance.stars;
+                if (GameManager.Instance.stars <= 0){
+                    GameManager.Instance.BackToGameScene();
+                    Hide();
+                }
             }
 
             firstSelectedButtonIndex = -1;

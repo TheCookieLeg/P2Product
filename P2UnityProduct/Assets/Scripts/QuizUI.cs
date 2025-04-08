@@ -34,33 +34,34 @@ public class QuizUI : MonoBehaviour {
                         DisplayCurrentQuestion();
                     } else {
                         GameManager.Instance.CompleteLevel();
+                        Hide();
                     }
                 } else {
                     GameManager.Instance.stars--;
                     starsText.text = "Stars: " + GameManager.Instance.stars;
 
                     if (GameManager.Instance.stars <= 0){
-                        GameManager.Instance.FailLevel();
+                        GameManager.Instance.BackToGameScene();
+                        Hide();
                     }
                 }
             });
 
             backButton.onClick.AddListener(() => {
-                GameManager.Instance.FailLevel();
+                GameManager.Instance.BackToGameScene();
+                Hide();
             });
         }
     }
 
     private void Start(){
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
-        GameManager.Instance.OnExitLevel += GameManager_OnExitLevel;
 
         Hide();
     }
 
     private void OnDestroy(){
         GameManager.Instance.OnEnterLevel -= GameManager_OnEnterLevel;
-        GameManager.Instance.OnExitLevel -= GameManager_OnExitLevel;
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
@@ -74,10 +75,6 @@ public class QuizUI : MonoBehaviour {
         GameManager.Instance.stars = 3;
         starsText.text = "Stars: " + GameManager.Instance.stars;
         DisplayCurrentQuestion();
-    }
-
-    private void GameManager_OnExitLevel(object sender, EventArgs e){
-        Hide();
     }
 
     private void DisplayCurrentQuestion(){
