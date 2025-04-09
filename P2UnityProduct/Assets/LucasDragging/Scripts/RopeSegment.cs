@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RopeScripting : MonoBehaviour
+public class RopeSegment : MonoBehaviour
 {
     public GameObject connectedAbove, connectedBelow;
     void Start()
     {
         connectedAbove = GetComponent<HingeJoint2D>().connectedBody.gameObject;
-        RopeScripting aboveSegment = connectedAbove.GetComponent<RopeScripting>();
+        RopeSegment aboveSegment = connectedAbove.GetComponent<RopeSegment>();
         if (aboveSegment != null)
         {
             aboveSegment.connectedBelow = gameObject;
@@ -20,6 +20,5 @@ public class RopeScripting : MonoBehaviour
             GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0, 0);
         }
     }
-
 
 }

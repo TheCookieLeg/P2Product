@@ -6,13 +6,15 @@ public class Rope : MonoBehaviour
 {
     public Rigidbody2D hook;
     public GameObject[] prefabRopeSegs;
-    public int numLinks = 5;
+    [SerializeField, Range(2, 50)] public int numLinks = 5;
+
+    // Start is called before the first frame update
     void Start()
     {
         GenerateRope();
     }
 
-    private void GenerateRope()
+    void GenerateRope()
     {
         Rigidbody2D prevBod = hook;
         for (int i = 0; i < numLinks; i++)
