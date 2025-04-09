@@ -45,32 +45,72 @@ public class LevelButtons : MonoBehaviour {
     }
 
     private void UpdateVisuals(){
-        stars = PlayerPrefs.GetInt("Level" + levelID + "Stars", 0);
-
-        if (GameManager.Instance.levelsCompleted >= levelID - 1){
-            unlocked = true;
-            button = unlockedButton.GetComponent<Button>();
-            for (int i = 0; i < 3; i++){
-                if (stars >= i + 1){
-                    starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
-                    starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
+        switch (GameManager.Instance.threadID){
+            case 0:
+                stars = PlayerPrefs.GetInt("HåndsyLevel" + levelID + "Stars", 0);
+                if (GameManager.Instance.levelsCompletedHåndsy >= levelID - 1){
+                    unlocked = true;
+                    button = unlockedButton.GetComponent<Button>();
+                    for (int i = 0; i < 3; i++){
+                        if (stars >= i + 1){
+                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
+                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
+                        } else {
+                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
+                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
+                        }
+                    }
                 } else {
-                    starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
-                    starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
+                    unlocked = false;
+                    button = lockedButton.GetComponent<Button>();
                 }
-            }
-        } else {
-            unlocked = false;
-            button = lockedButton.GetComponent<Button>();
+                break;
+            case 1:
+                stars = PlayerPrefs.GetInt("SymaskineLevel" + levelID + "Stars", 0);
+                if (GameManager.Instance.levelsCompletedSymaskine >= levelID - 1){
+                    unlocked = true;
+                    button = unlockedButton.GetComponent<Button>();
+                    for (int i = 0; i < 3; i++){
+                        if (stars >= i + 1){
+                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
+                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
+                        } else {
+                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
+                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
+                        }
+                    }
+                } else {
+                    unlocked = false;
+                    button = lockedButton.GetComponent<Button>();
+                }
+                break;
+            case 2:
+                stars = PlayerPrefs.GetInt("LapperLevel" + levelID + "Stars", 0);
+                if (GameManager.Instance.levelsCompletedLapper >= levelID - 1){
+                    unlocked = true;
+                    button = unlockedButton.GetComponent<Button>();
+                    for (int i = 0; i < 3; i++){
+                        if (stars >= i + 1){
+                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
+                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
+                        } else {
+                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
+                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
+                        }
+                    }
+                } else {
+                    unlocked = false;
+                    button = lockedButton.GetComponent<Button>();
+                }
+                break;
         }
+
         lockedButton.SetActive(!unlocked);
         unlockedButton.SetActive(unlocked);
 
         button.onClick.AddListener(() => {
             if (unlocked){
                 GameManager.Instance.HoverLevel(levelID, levelData);
-            } else {
-                Debug.Log("Level er ikke låst op");
             }
         });
     }
