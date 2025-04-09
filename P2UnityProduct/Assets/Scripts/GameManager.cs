@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnHoverLevel;
     public event EventHandler OnEnterThread;
     public event EventHandler OnLeaveLevel;
+    public event EventHandler OnLeaveThread;
+
+    [SerializeField] private Animator transmissionAnim;
 
     [HideInInspector] public QuizLevelSO currentLevelQuizData;
     [HideInInspector] public MatchLevelSO currentLevelMatchData;
@@ -142,12 +145,31 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EnterThread(int chosenThreadID){
+        StartCoroutine(EnterThreadDelay(chosenThreadID));
+    }
+
+    private IEnumerator EnterThreadDelay(int chosenThreadID){
+        transmissionAnim.SetTrigger("Close");
+
+        yield return new WaitForSeconds(1f);
+
+        transmissionAnim.SetTrigger("Open");
         threadID = chosenThreadID;
+        OnLeaveThread?.Invoke(this, EventArgs.Empty);
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
         OnEnterThread?.Invoke(this, EventArgs.Empty);
     }
 
     public void LeaveLevel(){
+        StartCoroutine(LeaveLevelDelay());
+    }
+
+    private IEnumerator LeaveLevelDelay(){
+        transmissionAnim.SetTrigger("Close");
+
+        yield return new WaitForSeconds(1f);
+
+        transmissionAnim.SetTrigger("Open");
         OnLeaveLevel?.Invoke(this, EventArgs.Empty);
     }
 }

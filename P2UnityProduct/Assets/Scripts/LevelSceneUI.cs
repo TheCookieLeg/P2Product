@@ -16,21 +16,29 @@ public class LevelSceneUI : MonoBehaviour {
     [SerializeField] private GameObject[] levels;
     [SerializeField] private Transform[] hoverLevelStars;
 
+    private Animator anim;
+
+    private void Awake(){
+        anim = GetComponent<Animator>();
+    }
+
     private void Start(){
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
         GameManager.Instance.OnExitToGameScene += GameManager_OnExitToGameScene;
         GameManager.Instance.OnHoverLevel += GameManager_OnHoverLevel;
         GameManager.Instance.OnEnterThread += GameManager_OnEnterThread;
+        GameManager.Instance.OnLeaveLevel += GameManager_OnLeaveLevel;
 
         startButton.onClick.AddListener(() => {
             GameManager.Instance.EnterLevel();
+            anim.SetTrigger("End");
         });
         backButton.onClick.AddListener(() => {
             GameManager.Instance.LeaveLevel();
-            Hide();
         });
         hoverBackButton.onClick.AddListener(() => {
-            hoverUI.SetActive(false);
+            hoverUI.GetComponent<Animator>().SetTrigger("End");
+            Invoke("HideHover", 0.5f);
         });
 
         Hide();
@@ -40,20 +48,28 @@ public class LevelSceneUI : MonoBehaviour {
         GameManager.Instance.OnEnterLevel -= GameManager_OnEnterLevel;
         GameManager.Instance.OnExitToGameScene -= GameManager_OnExitToGameScene;
         GameManager.Instance.OnHoverLevel -= GameManager_OnHoverLevel;
+        GameManager.Instance.OnEnterThread -= GameManager_OnEnterThread;
+        GameManager.Instance.OnLeaveLevel -= GameManager_OnLeaveLevel;
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        hoverUI.SetActive(false);
-        Hide();
+        Invoke("Hide", 0.5f);
     }
 
     private void GameManager_OnExitToGameScene(object sender, EventArgs e){
+        hoverUI.SetActive(false);
         Show();
+        anim.SetTrigger("StartFromMinigame");
     }
 
     private void GameManager_OnEnterThread(object sender, EventArgs e){
+        hoverUI.SetActive(false);
         Show();
         UpdateUI();
+    }
+
+    private void GameManager_OnLeaveLevel(object sender, EventArgs e){
+        Hide();
     }
 
     private void UpdateUI(){
@@ -94,5 +110,9 @@ public class LevelSceneUI : MonoBehaviour {
 
     private void Show(){
         gameObject.SetActive(true);
+    }
+
+    private void HideHover(){
+        hoverUI.SetActive(false);
     }
 }

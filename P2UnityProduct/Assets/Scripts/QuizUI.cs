@@ -20,11 +20,15 @@ public class QuizUI : MonoBehaviour {
     private QuizLevelSO.Question currentQuestion;
     private int currentQuestionIndex = 0;
     private QuizLevelSO quizData;
+    private Animator anim;
 
     private void Awake(){
+        anim = GetComponent<Animator>();
+
         backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
-            Hide();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
         });
 
         for (int i = 0; i < buttons.Length; i++){
@@ -81,7 +85,8 @@ public class QuizUI : MonoBehaviour {
 
             if (GameManager.Instance.stars <= 0){
                 GameManager.Instance.BackToGameScene();
-                Hide();
+                anim.SetTrigger("End");
+                Invoke("Hide", 0.5f);
                 return;
             }
 
@@ -94,7 +99,8 @@ public class QuizUI : MonoBehaviour {
             LoadQuestion(currentQuestionIndex);
         } else {
             GameManager.Instance.CompleteLevel();
-            Hide();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
         }
     }
 

@@ -17,26 +17,33 @@ public class ThreadSceneUI : MonoBehaviour {
     private void Awake(){
         håndsyButton.onClick.AddListener(() => {
             GameManager.Instance.EnterThread(0);
-            Hide();
         });
         symaskineButton.onClick.AddListener(() => {
             GameManager.Instance.EnterThread(1);
-            Hide();
         });
         lapperButton.onClick.AddListener(() => {
             GameManager.Instance.EnterThread(2);
-            Hide();
         });
         UpdateCompletion();
     }
 
     private void Start(){
         GameManager.Instance.OnLeaveLevel += GameManager_OnLeaveLevel;
+        GameManager.Instance.OnLeaveThread += GameManager_OnLeaveThread;
     }
 
-    private void GameManager_OnLeaveLevel(object sender, EventArgs e){
+    private void OnDestroy(){
+        GameManager.Instance.OnLeaveLevel -= GameManager_OnLeaveLevel;
+        GameManager.Instance.OnLeaveThread -= GameManager_OnLeaveThread;
+    }
+
+  private void GameManager_OnLeaveLevel(object sender, EventArgs e){
         UpdateCompletion();
         Show();
+    }
+
+    private void GameManager_OnLeaveThread(object sender, EventArgs e){
+        Hide();
     }
 
     private void UpdateCompletion(){

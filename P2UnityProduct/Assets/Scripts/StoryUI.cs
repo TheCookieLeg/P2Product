@@ -18,13 +18,17 @@ public class StoryUI : MonoBehaviour {
     private StoryLevelSO.Question currentQuestion;
     private int currentQuestionIndex = 0;
     private StoryLevelSO storyData;
+    private Animator anim;
 
     private int firstSelectedIndex = -1;
 
     private void Awake(){
+        anim = GetComponent<Animator>();
+
         backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
-            Hide();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
         });
 
         confirmButton.onClick.AddListener(() => OnConfirmClicked());
@@ -111,12 +115,20 @@ public class StoryUI : MonoBehaviour {
                 LoadQuestion(currentQuestionIndex);
             } else {
                 GameManager.Instance.CompleteLevel();
-                Hide();
+                anim.SetTrigger("End");
+                Invoke("Hide", 0.5f);
             }
         } else {
             Debug.Log("Incorrect order!");
             GameManager.Instance.stars--;
             starsText.text = "Stars: " + GameManager.Instance.stars;
+
+            if (GameManager.Instance.stars <= 0){
+                GameManager.Instance.BackToGameScene();
+                anim.SetTrigger("End");
+                Invoke("Hide", 0.5f);
+                return;
+            }
         }
     }
 

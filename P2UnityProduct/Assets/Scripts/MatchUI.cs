@@ -19,8 +19,11 @@ public class MatchUI : MonoBehaviour {
     private int firstSelectedButtonIndex = -1;
     private Dictionary<int, int> correctMatches = new Dictionary<int, int>();
     private int matchCount = 0;
+    private Animator anim;
 
     private void Awake(){
+        anim = GetComponent<Animator>();
+
         for (int i = 0; i < buttons.Length; i++){
             int index = i;
             buttons[i].onClick.AddListener(() => OnButtonClicked(index));
@@ -28,7 +31,8 @@ public class MatchUI : MonoBehaviour {
 
         backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
-            Hide();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
         });
     }
 
@@ -100,7 +104,8 @@ public class MatchUI : MonoBehaviour {
                         LoadQuestion(currentQuestionIndex);
                     } else {
                         GameManager.Instance.CompleteLevel();
-                        Hide();
+                        anim.SetTrigger("End");
+                        Invoke("Hide", 0.5f);
                     }
                 }
             } else {
@@ -111,7 +116,8 @@ public class MatchUI : MonoBehaviour {
                 starsText.text = "Stars: " + GameManager.Instance.stars;
                 if (GameManager.Instance.stars <= 0){
                     GameManager.Instance.BackToGameScene();
-                    Hide();
+                    anim.SetTrigger("End");
+                    Invoke("Hide", 0.5f);
                 }
             }
 
