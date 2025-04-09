@@ -68,7 +68,7 @@ public class LevelButtons : MonoBehaviour {
 
         button.onClick.AddListener(() => {
             if (unlocked){
-                GameManager.Instance.EnterLevel(levelID, levelData);
+                GameManager.Instance.HoverLevel(levelID, levelData);
             } else {
                 Debug.Log("Level er ikke låst op");
             }

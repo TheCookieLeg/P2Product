@@ -11,12 +11,16 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnExitToGameScene;
     public event EventHandler OnRefreshLevels;
     public event EventHandler OnEnterProfile;
+    public event EventHandler OnHoverLevel;
 
     public int currentLevelID;
     public QuizLevelSO currentLevelQuizData;
     public MatchLevelSO currentLevelMatchData;
     public int levelsCompleted;
     public int stars;
+    public int hoverLevelID;
+    public int hoverStars;
+    public BaseLevelSO hoverLevelData;
 
     private void Awake(){
         if (Instance != null && Instance != this){
@@ -28,18 +32,13 @@ public class GameManager : MonoBehaviour {
         levelsCompleted = PlayerPrefs.GetInt("LevelsCompleted");
     }
 
-    public void EnterLevel(int levelID, BaseLevelSO levelData){
-        if (levelData == null){
-            Debug.LogWarning("Dette level mangler data");
-            return;
-        }
+    public void EnterLevel(){
+        currentLevelID = hoverLevelID;
 
-        currentLevelID = levelID;
-
-        if (levelData is QuizLevelSO quizData){
+        if (hoverLevelData is QuizLevelSO quizData){
             currentLevelQuizData = quizData;
             currentLevelMatchData = null;
-        } else if (levelData is MatchLevelSO matchData){
+        } else if (hoverLevelData is MatchLevelSO matchData){
             currentLevelMatchData = matchData;
             currentLevelQuizData = null;
         }
@@ -76,5 +75,12 @@ public class GameManager : MonoBehaviour {
         PlayerPrefs.DeleteAll();
         
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void HoverLevel(int levelID, BaseLevelSO levelData){
+        hoverLevelID = levelID;
+        hoverLevelData = levelData;
+        hoverStars = PlayerPrefs.GetInt("Level" + levelID + "Stars");
+        OnHoverLevel?.Invoke(this, EventArgs.Empty);
     }
 }

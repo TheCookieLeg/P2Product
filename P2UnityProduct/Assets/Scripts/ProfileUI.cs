@@ -7,17 +7,20 @@ using UnityEngine.UI;
 public class ProfileUI : MonoBehaviour {
 
     [SerializeField] private Button restartButton;
-
     [SerializeField] private Button backButton;
+    private Animator anim;
 
     private void Awake(){
+        anim = GetComponent<Animator>();
+
         restartButton.onClick.AddListener(() => {
             GameManager.Instance.RestartProgress();
         });
 
         backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
-            Hide();
+            anim.SetTrigger("Close");
+            Invoke("Hide", 0.5f);
         });
     }
 
