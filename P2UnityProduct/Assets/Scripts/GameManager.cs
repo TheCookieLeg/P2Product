@@ -13,14 +13,17 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnEnterProfile;
     public event EventHandler OnHoverLevel;
 
-    public int currentLevelID;
-    public QuizLevelSO currentLevelQuizData;
-    public MatchLevelSO currentLevelMatchData;
-    public int levelsCompleted;
-    public int stars;
-    public int hoverLevelID;
-    public int hoverStars;
-    public BaseLevelSO hoverLevelData;
+    [HideInInspector] public QuizLevelSO currentLevelQuizData;
+    [HideInInspector] public MatchLevelSO currentLevelMatchData;
+    [HideInInspector] public StoryLevelSO currentLevelStoryData;
+
+    private int currentLevelID;
+    [HideInInspector] public int levelsCompleted;
+    [HideInInspector] public int stars;
+
+    [HideInInspector] public int hoverLevelID;
+    [HideInInspector] public int hoverStars;
+    private BaseLevelSO hoverLevelData;
 
     private void Awake(){
         if (Instance != null && Instance != this){
@@ -38,8 +41,14 @@ public class GameManager : MonoBehaviour {
         if (hoverLevelData is QuizLevelSO quizData){
             currentLevelQuizData = quizData;
             currentLevelMatchData = null;
+            currentLevelStoryData = null;
         } else if (hoverLevelData is MatchLevelSO matchData){
             currentLevelMatchData = matchData;
+            currentLevelQuizData = null;
+            currentLevelStoryData = null;
+        } else if (hoverLevelData is StoryLevelSO storyData){
+            currentLevelStoryData = storyData;
+            currentLevelMatchData = null;
             currentLevelQuizData = null;
         }
 

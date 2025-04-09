@@ -8,55 +8,33 @@ using UnityEngine.Video;
 
 public class QuizUI : MonoBehaviour {
 
-    [Header("Quiz Data")]
-    [SerializeField] private QuizLevelSO quizData;
-
     [Header("References")]
+    [SerializeField] private TextMeshProUGUI starsText;
+    [SerializeField] private Button backButton;
     [SerializeField] private TextMeshProUGUI questionText;
     [SerializeField] private GameObject video;
     [SerializeField] private VideoPlayer videoPlayer;
-    [SerializeField] private TextMeshProUGUI starsText;
-    [SerializeField] private Button backButton;
-    [SerializeField] private Button[] answerButtons;
+    [SerializeField] private Button[] buttons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
 
+    private QuizLevelSO.Question currentQuestion;
     private int currentQuestionIndex = 0;
+    private QuizLevelSO quizData;
 
     private void Awake(){
-        for (int i = 0; i < answerButtons.Length; i++){
+        backButton.onClick.AddListener(() => {
+            GameManager.Instance.BackToGameScene();
+            Hide();
+        });
+
+        for (int i = 0; i < buttons.Length; i++){
             int index = i;
-
-            answerButtons[i].onClick.AddListener(() =>{
-                if (OnAnswerSelected(index)){
-                    currentQuestionIndex++;
-
-                    if (currentQuestionIndex < quizData.questions.Count){
-                        DisplayCurrentQuestion();
-                    } else {
-                        GameManager.Instance.CompleteLevel();
-                        Hide();
-                    }
-                } else {
-                    GameManager.Instance.stars--;
-                    starsText.text = "Stars: " + GameManager.Instance.stars;
-
-                    if (GameManager.Instance.stars <= 0){
-                        GameManager.Instance.BackToGameScene();
-                        Hide();
-                    }
-                }
-            });
-
-            backButton.onClick.AddListener(() => {
-                GameManager.Instance.BackToGameScene();
-                Hide();
-            });
+            buttons[i].onClick.AddListener(() => OnAnswerClicked(index));
         }
     }
 
     private void Start(){
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
-
         Hide();
     }
 
@@ -68,26 +46,26 @@ public class QuizUI : MonoBehaviour {
         if (GameManager.Instance.currentLevelQuizData == null) return;
 
         quizData = GameManager.Instance.currentLevelQuizData;
-
-        Show();
-
         currentQuestionIndex = 0;
+
         GameManager.Instance.stars = 3;
         starsText.text = "Stars: " + GameManager.Instance.stars;
-        DisplayCurrentQuestion();
+
+        Show();
+        LoadQuestion(currentQuestionIndex);
     }
 
-    private void DisplayCurrentQuestion(){
-        var question = quizData.questions[currentQuestionIndex];
+    private void LoadQuestion(int index){
+        currentQuestion = quizData.questions[index];
 
-        questionText.text = question.questionText;
-        videoPlayer.clip = question.videoClip;
+        questionText.text = currentQuestion.questionText;
+        videoPlayer.clip = currentQuestion.videoClip;
 
         for (int i = 0; i < answerTexts.Length; i++){
-            answerTexts[i].text = question.answers[i];
+            answerTexts[i].text = currentQuestion.answers[i];
         }
 
-        if (quizData.questions[currentQuestionIndex].videoClip != null){
+        if (quizData.questions[index].videoClip != null){
             video.gameObject.SetActive(true);
             videoPlayer.Play();
         } else {
@@ -96,12 +74,31 @@ public class QuizUI : MonoBehaviour {
         }
     }
 
-    private bool OnAnswerSelected(int selectedIndex){
-        if (currentQuestionIndex >= quizData.questions.Count){
-            Debug.LogWarning("No more questions available.");
-            return false;
+    private void OnAnswerClicked(int selectedIndex){
+        if (!IsAnswerCorrect(selectedIndex)){
+            GameManager.Instance.stars--;
+            starsText.text = "Stars: " + GameManager.Instance.stars;
+
+            if (GameManager.Instance.stars <= 0){
+                GameManager.Instance.BackToGameScene();
+                Hide();
+                return;
+            }
+
+            return;
         }
 
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.questions.Count){
+            LoadQuestion(currentQuestionIndex);
+        } else {
+            GameManager.Instance.CompleteLevel();
+            Hide();
+        }
+    }
+
+    private bool IsAnswerCorrect(int selectedIndex){
         var question = quizData.questions[currentQuestionIndex];
         return selectedIndex == (question.correctAnswerIndex - 1);
     }

@@ -12,10 +12,10 @@ public class MatchLevelSO : BaseLevelSO {
     }
 
     [System.Serializable]
-    public class MatchQuestion{
+    public class Question{
         public string[] answers = new string[6];
         public List<MatchPair> matchPairs = new List<MatchPair>(3);
     }
 
-    public List<MatchQuestion> questions = new List<MatchQuestion>();
+    public List<Question> questions = new List<Question>();
 }

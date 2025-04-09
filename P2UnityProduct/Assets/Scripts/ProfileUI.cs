@@ -20,7 +20,7 @@ public class ProfileUI : MonoBehaviour {
         backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
             anim.SetTrigger("Close");
-            Invoke("Hide", 0.5f);
+            Invoke("Hide", 0.6f);
         });
     }
 

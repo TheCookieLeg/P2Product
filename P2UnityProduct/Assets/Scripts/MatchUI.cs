@@ -7,17 +7,18 @@ using TMPro;
 
 public class MatchUI : MonoBehaviour {
 
-    [SerializeField] private MatchLevelSO matchData;
     [SerializeField] private TextMeshProUGUI starsText;
     [SerializeField] private Button backButton;
     [SerializeField] private Button[] buttons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
 
+    private MatchLevelSO.Question currentQuestion;
+    private int currentQuestionIndex = 0;
+    private MatchLevelSO matchData;
+
     private int firstSelectedButtonIndex = -1;
     private Dictionary<int, int> correctMatches = new Dictionary<int, int>();
     private int matchCount = 0;
-    private int currentQuestionIndex = 0;
-    private MatchLevelSO.MatchQuestion currentQuestion;
 
     private void Awake(){
         for (int i = 0; i < buttons.Length; i++){
@@ -45,12 +46,12 @@ public class MatchUI : MonoBehaviour {
         if (GameManager.Instance.currentLevelMatchData == null) return;
 
         matchData = GameManager.Instance.currentLevelMatchData;
-
-        Show();
-
         currentQuestionIndex = 0;
+
         GameManager.Instance.stars = 3;
         starsText.text = "Stars: " + GameManager.Instance.stars;
+
+        Show();
         LoadQuestion(currentQuestionIndex);
     }
 

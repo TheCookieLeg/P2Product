@@ -9,8 +9,8 @@ public class GameSceneUI : MonoBehaviour {
     [SerializeField] private Button startButton;
     [SerializeField] private Button backButton;
     [SerializeField] private TextMeshProUGUI hoverLevelText;
-    [SerializeField] private Transform[] hoverLevelStars;
     [SerializeField] private GameObject hoverUI;
+    [SerializeField] private Transform[] hoverLevelStars;
 
     private void Start(){
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
