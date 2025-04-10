@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: 
   questions:
-  - questionText: who dis?
+  - questionText: Hvad ser du i videoen?
     videoClip: {fileID: 32900000, guid: 2f0261d8001b1e6418d0785d751342f9, type: 3}
     answers:
     - Korssting
@@ -22,14 +22,14 @@ MonoBehaviour:
     - Bagsting
     - Tungesting
     correctAnswerIndex: 3
-  - questionText: "V\xE6lg den rigtige knap"
+  - questionText: "Hvilken type n\xE5l er bedst at bruge til tyndt stof?"
     videoClip: {fileID: 0}
     answers:
-    - Den her
-    - Den her?
-    - "M\xE5ske den her?"
-    - Eller den her?
-    correctAnswerIndex: 1
+    - "En tyk n\xE5l"
+    - "En tynd n\xE5l"
+    - "En lang n\xE5l"
+    - "En kort n\xE5l"
+    correctAnswerIndex: 2
   - questionText: Hvad er et bagsting?
     videoClip: {fileID: 0}
     answers:
