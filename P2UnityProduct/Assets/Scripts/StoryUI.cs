@@ -64,12 +64,17 @@ public class StoryUI : MonoBehaviour {
     private void LoadQuestion(int index){
         currentQuestion = storyData.questions[index];
 
-        List<int> randomIndices = Enumerable.Range(0, currentQuestion.answers.Length).ToList();
-        randomIndices = randomIndices.OrderBy(x => UnityEngine.Random.value).ToList();
+        List<int> randomIndices = Enumerable.Range(0, buttons.Length).OrderBy(x => UnityEngine.Random.value).ToList();
 
-        for (int i = 0; i < answerImages.Length; i++) {
-            answerImages[i].sprite = currentQuestion.answers[randomIndices[i]];
-            answerImages[i].gameObject.name = randomIndices[i].ToString();
+        for (int i = 0; i < buttons.Length; i++){
+            buttons[randomIndices[i]].transform.SetSiblingIndex(i);
+        }
+
+        for (int i = 0; i < answerImages.Length; i++){
+            answerImages[i].sprite = currentQuestion.answers[i]; // Keep correct order here
+            answerImages[i].gameObject.name = i.ToString(); // Restore original index name if needed
+            buttons[i].interactable = true;
+            buttons[i].GetComponent<Image>().color = Color.white;
         }
 
         firstSelectedIndex = -1;
@@ -100,10 +105,16 @@ public class StoryUI : MonoBehaviour {
     private void OnConfirmClicked(){
         bool isCorrect = true;
 
-        for (int i = 0; i < answerImages.Length; i++) {
-            if (answerImages[i].sprite != currentQuestion.answers[i]) {
+        for (int i = 0; i < buttons.Length; i++){
+            int buttonIndex = buttons[i].transform.GetSiblingIndex();
+
+            if (answerImages[buttonIndex].sprite != currentQuestion.answers[i]){
+                Debug.Log("Answer " + (i + 1) + " is wrong");
                 isCorrect = false;
-                break;
+            } else {
+                Debug.Log("Answer " + (i + 1) + " is correct");
+                buttons[i].interactable = false;
+                buttons[i].GetComponent<Image>().color = Color.black;
             }
         }
 

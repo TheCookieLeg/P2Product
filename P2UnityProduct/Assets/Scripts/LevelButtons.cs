@@ -31,6 +31,8 @@ public class LevelButtons : MonoBehaviour {
             levelTypeText.text = "QUIZ";
         } else if (levelData is MatchLevelSO){
             levelTypeText.text = "MATCH";
+        } else if (levelData is StoryLevelSO){
+            levelTypeText.text = "STORY";
         }
     }
 
