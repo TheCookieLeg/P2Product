@@ -8,6 +8,7 @@ using UnityEngine;
 public class FabricSpawner : MonoBehaviour
 {
     public GameObject fabric;
+    public GameObject Scorer;
     [SerializeField, Tooltip("The distance between each piece of fabric")] private float distance = 1f;
     [SerializeField, Tooltip("Number of fabrics to spawn")] private int repetitions;
     private Vector3 spawnPoint;
@@ -18,7 +19,9 @@ public class FabricSpawner : MonoBehaviour
         for (int i = 0; i < repetitions; i++)
         {
             Instantiate(fabric, spawnPoint, quaternion.identity);
-            spawnPoint += new Vector3(distance, 0, 0);
+            spawnPoint += new Vector3(distance / 2, 0, 0);
+            Instantiate(Scorer, spawnPoint, quaternion.identity);
+            spawnPoint += new Vector3(distance / 2, 0, 0);
         }
     }
 
