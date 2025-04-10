@@ -30,3 +30,11 @@ MonoBehaviour:
     - "M\xE5ske den her?"
     - Eller den her?
     correctAnswerIndex: 1
+  - questionText: Hvad er et bagsting?
+    videoClip: {fileID: 0}
+    answers:
+    - "Et st\xE6rkt sting der minder om de sting en maskine kan lave"
+    - "Et sting man syr bag p\xE5 stoffet"
+    - Et sting man kun kan sy baglens
+    - Det er ikke et sting
+    correctAnswerIndex: 1
