@@ -15,12 +15,12 @@ MonoBehaviour:
   levelName: 
   questions:
   - questionText: who dis?
-    videoClip: {fileID: 32900000, guid: c5c90bb0f4db69043980059f153990d0, type: 3}
+    videoClip: {fileID: 32900000, guid: 2f0261d8001b1e6418d0785d751342f9, type: 3}
     answers:
-    - Obama
-    - Justin Bieber
-    - Rick Astley
-    - Elvis Presley
+    - Korssting
+    - Fladsting
+    - Bagsting
+    - Tungesting
     correctAnswerIndex: 3
   - questionText: "V\xE6lg den rigtige knap"
     videoClip: {fileID: 0}
