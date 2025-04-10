@@ -19,10 +19,12 @@ public class ThreadSceneUI : MonoBehaviour {
             GameManager.Instance.EnterThread(0);
         });
         symaskineButton.onClick.AddListener(() => {
-            GameManager.Instance.EnterThread(1);
+            Debug.LogWarning("No");
+            //GameManager.Instance.EnterThread(1);
         });
         lapperButton.onClick.AddListener(() => {
-            GameManager.Instance.EnterThread(2);
+            Debug.LogWarning("No");
+            //GameManager.Instance.EnterThread(2);
         });
         UpdateCompletion();
     }

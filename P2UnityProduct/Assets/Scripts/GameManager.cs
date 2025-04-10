@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnLeaveLevel;
     public event EventHandler OnLeaveThread;
 
+    [SerializeField] [Range(0.5f, 1.5f)] private float transmissionTid = 1f;
     [SerializeField] private Animator transmissionAnim;
 
     [HideInInspector] public QuizLevelSO currentLevelQuizData;
@@ -151,7 +152,7 @@ public class GameManager : MonoBehaviour {
     private IEnumerator EnterThreadDelay(int chosenThreadID){
         transmissionAnim.SetTrigger("Close");
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(transmissionTid);
 
         transmissionAnim.SetTrigger("Open");
         threadID = chosenThreadID;
@@ -167,7 +168,7 @@ public class GameManager : MonoBehaviour {
     private IEnumerator LeaveLevelDelay(){
         transmissionAnim.SetTrigger("Close");
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(transmissionTid);
 
         transmissionAnim.SetTrigger("Open");
         OnLeaveLevel?.Invoke(this, EventArgs.Empty);
