@@ -15,10 +15,13 @@ public class Dragging : MonoBehaviour
     private UnityEngine.Vector2 oldPos;
     private UnityEngine.Vector2 newPos;
 
+    public GameObject spawner;
+
     // Start is called before the first frame update
     void Start()
     {
         zDepth = Camera.main.WorldToScreenPoint(transform.position).z;
+        spawner = GameObject.FindGameObjectWithTag("Spawner");
     }
 
     // Update is called once per frame
@@ -33,6 +36,10 @@ public class Dragging : MonoBehaviour
         if (Input.touchCount > 0) // if more than zero fingers is touching the screen
         {
             Debug.Log("I GOT TOUCHED");
+            if (spawner != null)
+            {
+                spawner.GetComponent<FabricMovement>().StartMovement();
+            }
             Touch touch = Input.GetTouch(0); // Gets info on the first finger that touches the screen (struct variable)
 
             UnityEngine.Vector3 touchPosition = Camera.main.ScreenToWorldPoint(new UnityEngine.Vector3(touch.position.x, touch.position.y, zDepth));

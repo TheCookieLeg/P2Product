@@ -9,7 +9,7 @@ public class FabricSpawner : MonoBehaviour
     [SerializeField, Tooltip("The distance between each piece of fabric")] private float distance = 1f;
     [SerializeField, Tooltip("Number of fabrics to spawn")] private int repetitions;
 
-    private List<Vector3> fabricPositions = new List<Vector3>();
+    private List<GameObject> fabricPositions = new List<GameObject>();
     private int nextScorerIndex = 0;
     private int index = 0;
     
@@ -22,8 +22,7 @@ public class FabricSpawner : MonoBehaviour
         // Spawn fabrics and store their positions
         for (int i = 0; i < repetitions; i++)
         {
-            Instantiate(fabric, fabricSpawnPoint, quaternion.identity, gameObject.transform);
-            fabricPositions.Add(fabricSpawnPoint);
+            fabricPositions.Add(Instantiate(fabric, fabricSpawnPoint, quaternion.identity, gameObject.transform));
             fabricSpawnPoint += new Vector3(distance, 0, 0);
         }
         SpawnScorerFirstTime();
@@ -37,8 +36,8 @@ public class FabricSpawner : MonoBehaviour
             return;
         }
 
-        Vector3 posA = fabricPositions[scorerBaseIndex];
-        Vector3 posB = fabricPositions[scorerBaseIndex + 1];
+        Vector3 posA = fabricPositions[scorerBaseIndex].transform.position;
+        Vector3 posB = fabricPositions[scorerBaseIndex + 1].transform.position;
         Vector3 midpoint = (posA + posB) / 2;
 
         Instantiate(Scorer, midpoint, quaternion.identity, gameObject.transform);
@@ -57,8 +56,8 @@ public class FabricSpawner : MonoBehaviour
 
     private void SpawnScorerFirstTime()
     {
-        Vector3 posA = fabricPositions[nextScorerIndex];
-        Vector3 posB = fabricPositions[nextScorerIndex + 1];
+        Vector3 posA = fabricPositions[nextScorerIndex].transform.position;
+        Vector3 posB = fabricPositions[nextScorerIndex + 1].transform.position;
         Vector3 midpoint = (posA + posB) / 2;
 
         Instantiate(Scorer, midpoint, quaternion.identity, gameObject.transform);
