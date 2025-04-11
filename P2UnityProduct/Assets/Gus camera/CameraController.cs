@@ -27,22 +27,44 @@ public class CameraController : MonoBehaviour
         Debug.LogWarning($"Permission {permissionName} Denied");
     }
 
-
     private IEnumerator DelayedCameraInitialization()
     {
         yield return null;
         InitializeCamera();
     }
 
+
+    private void AskStorageWritePermission()
+    {
+        var callbacks = new PermissionCallbacks();
+        Permission.RequestUserPermission(Permission.ExternalStorageWrite, callbacks);
+    }
+    private void AskStorageReadPermission()
+    {
+        var callbacks = new PermissionCallbacks();
+        Permission.RequestUserPermission(Permission.ExternalStorageRead, callbacks);
+    }
+
     void Start()
     {
+        //this checks if we have permission for stuff like camera and storage, and asks for them if we don't
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
             AskCameraPermission();
         }
+        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        // {
+        //     AskStorageWritePermission();
+        // }
+        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
+        // {
+        //     AskStorageReadPermission();
+        // }
 
         InitializeCamera();
     }
+
+    // From this point on I kinda know what is going on!
 
     private WebCamTexture webcam;
     [SerializeField] private RawImage image;
@@ -59,12 +81,20 @@ public class CameraController : MonoBehaviour
         photo.SetPixels(webcam.GetPixels());
         photo.Apply();
 
-        // This should save the picture on the device 
-        byte[] bytes = photo.EncodeToPNG();
-        string fileName = DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
 
-        File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
-        Debug.Log("Saved: " + Application.persistentDataPath + fileName);
+        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        {
+            AskStorageWritePermission();
+        }
+        if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        {
+            // This should save the picture on the device 
+            byte[] bytes = photo.EncodeToPNG();
+            string fileName = DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+
+            File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
+            Debug.Log("Saved: " + Application.persistentDataPath + fileName);
+        }
     }
 
     void Update()
