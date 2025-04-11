@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NeedleBack
   - Score
+  - Spawner
   layers:
   - Default
   - TransparentFX
