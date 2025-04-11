@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - NeedleBack
+  - Score
+  - Spawner
   layers:
   - Default
   - TransparentFX
