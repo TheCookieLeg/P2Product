@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class LevelButtons : MonoBehaviour {
@@ -20,15 +21,9 @@ public class LevelButtons : MonoBehaviour {
     private int stars;
     private Button button;
     private bool unlocked = false;
-    private Animator anim;
 
     private void Awake(){
-        if (levelID == 0){
-            Debug.LogWarning("Level ID'et er ikke sat op endnu");
-            return;
-        }
-
-        anim = GetComponent<Animator>();
+        if (levelID == 0 || levelData == null) return;
 
         if (levelData is QuizLevelSO){
             levelTypeText.text = "QUIZ";
@@ -114,9 +109,13 @@ public class LevelButtons : MonoBehaviour {
         unlockedButton.SetActive(unlocked);
 
         button.onClick.AddListener(() => {
+            if (levelID == 0 || levelData == null){
+                Debug.LogWarning("Levelet er ikke sat op endnu");
+                return;
+            }
+            
             if (unlocked){
                 GameManager.Instance.HoverLevel(levelID, levelData);
-                anim.SetTrigger("Press");
             }
         });
     }

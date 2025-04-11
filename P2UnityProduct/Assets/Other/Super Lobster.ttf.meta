@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bff678c61690f4f06b25b5513bfa2f4a
+guid: 4feb9d5317cbc6844ab2484f3c39e6e3
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Kawaii Stitch
+  - Super Lobster
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

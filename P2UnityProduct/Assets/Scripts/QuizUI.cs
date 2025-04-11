@@ -69,6 +69,11 @@ public class QuizUI : MonoBehaviour {
             answerTexts[i].text = currentQuestion.answers[i];
         }
 
+        for (int i = 0; i < buttons.Length; i++){
+            buttons[i].interactable = true;
+            buttons[i].GetComponent<Image>().color = Color.white;
+        }
+
         if (quizData.questions[index].videoClip != null){
             video.gameObject.SetActive(true);
             videoPlayer.Play();
@@ -82,6 +87,9 @@ public class QuizUI : MonoBehaviour {
         if (!IsAnswerCorrect(selectedIndex)){
             GameManager.Instance.stars--;
             starsText.text = "Stars: " + GameManager.Instance.stars;
+
+            buttons[selectedIndex].interactable = false;
+            buttons[selectedIndex].GetComponent<Image>().color = Color.black;
 
             if (GameManager.Instance.stars <= 0){
                 GameManager.Instance.BackToGameScene();

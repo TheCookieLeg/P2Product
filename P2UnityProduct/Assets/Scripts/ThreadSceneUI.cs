@@ -8,23 +8,11 @@ using UnityEngine.UI;
 public class ThreadSceneUI : MonoBehaviour {
 
     [SerializeField] private Button håndsyButton;
-    [SerializeField] private Button symaskineButton;
-    [SerializeField] private Button lapperButton;
     [SerializeField] private TextMeshProUGUI håndsyText;
-    [SerializeField] private TextMeshProUGUI symaskineText;
-    [SerializeField] private TextMeshProUGUI lapperText;
 
     private void Awake(){
         håndsyButton.onClick.AddListener(() => {
             GameManager.Instance.EnterThread(0);
-        });
-        symaskineButton.onClick.AddListener(() => {
-            Debug.LogWarning("No");
-            //GameManager.Instance.EnterThread(1);
-        });
-        lapperButton.onClick.AddListener(() => {
-            Debug.LogWarning("No");
-            //GameManager.Instance.EnterThread(2);
         });
         UpdateCompletion();
     }
@@ -50,8 +38,6 @@ public class ThreadSceneUI : MonoBehaviour {
 
     private void UpdateCompletion(){
         int håndsyTotalStars = 0;
-        int symaskineTotalStars = 0;
-        int lapperTotalStars = 0;
 
         int amountOfLevels = 8;
 
@@ -61,17 +47,7 @@ public class ThreadSceneUI : MonoBehaviour {
             håndsyTotalStars += PlayerPrefs.GetInt("HåndsyLevel" + i + "Stars", 0);
         }
 
-        for (int i = 1; i <= amountOfLevels; i++){
-            symaskineTotalStars += PlayerPrefs.GetInt("SymaskineLevel" + i + "Stars", 0);
-        }
-
-        for (int i = 1; i <= amountOfLevels; i++){
-            lapperTotalStars += PlayerPrefs.GetInt("LapperLevel" + i + "Stars", 0);
-        }
-
-        håndsyText.text = (håndsyTotalStars / totalAmountOfStars * 100) + "%";
-        symaskineText.text = (symaskineTotalStars / totalAmountOfStars * 100) + "%";
-        lapperText.text = (lapperTotalStars / totalAmountOfStars * 100) + "%";
+        håndsyText.text = (håndsyTotalStars / totalAmountOfStars * 100).ToString("0") + "%";
     }
 
     private void Hide(){
