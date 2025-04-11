@@ -5,14 +5,48 @@ using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Android;
 
 public class CameraController : MonoBehaviour
 {
+    // ok, so I have pasted a shit ton of android permision stuff... Do I know how it works? NO!
+        private void AskCameraPermission()
+    {
+        var callbacks = new PermissionCallbacks();
+        callbacks.PermissionDenied += PermissionCallbacksPermissionDenied;
+        callbacks.PermissionGranted += PermissionCallbacksPermissionGranted;
+        Permission.RequestUserPermission(Permission.Camera, callbacks);
+    }
+    private void PermissionCallbacksPermissionGranted(string permissionName)
+    {
+        StartCoroutine(DelayedCameraInitialization());
+    }
+
+    private void PermissionCallbacksPermissionDenied(string permissionName)
+    {
+        Debug.LogWarning($"Permission {permissionName} Denied");
+    }
+
+
+    private IEnumerator DelayedCameraInitialization()
+    {
+        yield return null;
+        InitializeCamera();
+    }
+
+    void Start()
+    {
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
+        {
+            AskCameraPermission();
+        }
+
+        InitializeCamera();
+    }
+
     private WebCamTexture webcam;
     [SerializeField] private RawImage image;
-
-    // Start is called before the first frame update
-    void Start()
+    void InitializeCamera()
     {
         //finds a camera and shows the output as a texture
         webcam = new WebCamTexture();
