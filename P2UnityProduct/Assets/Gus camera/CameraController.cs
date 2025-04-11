@@ -95,6 +95,7 @@ public class CameraController : MonoBehaviour
             File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
             Debug.Log("Saved: " + Application.persistentDataPath + fileName);
         }
+
     }
 
     void Update()
