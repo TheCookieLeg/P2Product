@@ -20,12 +20,15 @@ public class LevelButtons : MonoBehaviour {
     private int stars;
     private Button button;
     private bool unlocked = false;
+    private Animator anim;
 
     private void Awake(){
         if (levelID == 0){
             Debug.LogWarning("Level ID'et er ikke sat op endnu");
             return;
         }
+
+        anim = GetComponent<Animator>();
 
         if (levelData is QuizLevelSO){
             levelTypeText.text = "QUIZ";
@@ -113,6 +116,7 @@ public class LevelButtons : MonoBehaviour {
         button.onClick.AddListener(() => {
             if (unlocked){
                 GameManager.Instance.HoverLevel(levelID, levelData);
+                anim.SetTrigger("Press");
             }
         });
     }
