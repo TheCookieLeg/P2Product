@@ -8,6 +8,7 @@ using TMPro;
 public class MatchUI : MonoBehaviour {
 
     [SerializeField] private TextMeshProUGUI starsText;
+    [SerializeField] private Animator starAnim;
     [SerializeField] private Button backButton;
     [SerializeField] private Button[] buttons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
@@ -53,7 +54,7 @@ public class MatchUI : MonoBehaviour {
         currentQuestionIndex = 0;
 
         GameManager.Instance.stars = 3;
-        starsText.text = "Stars: " + GameManager.Instance.stars;
+        starsText.text = GameManager.Instance.stars.ToString();
 
         Show();
         LoadQuestion(currentQuestionIndex);
@@ -69,7 +70,7 @@ public class MatchUI : MonoBehaviour {
         for (int i = 0; i < answerTexts.Length; i++){
             answerTexts[i].text = currentQuestion.answers[i];
             buttons[i].interactable = true;
-            buttons[i].GetComponent<Image>().color = Color.white;
+            buttons[i].GetComponentInChildren<Image>().color = Color.white;
         }
 
         foreach (var pair in currentQuestion.matchPairs){
@@ -81,47 +82,107 @@ public class MatchUI : MonoBehaviour {
     private void OnButtonClicked(int index){
         if (firstSelectedButtonIndex == -1){
             firstSelectedButtonIndex = index;
-            buttons[index].GetComponent<Image>().color = Color.green;
+            buttons[index].GetComponent<Animator>().SetBool("Active", true);
         } else if (firstSelectedButtonIndex == index){
             firstSelectedButtonIndex = -1;
-            buttons[index].GetComponent<Image>().color = Color.white;
+            buttons[index].GetComponent<Animator>().SetBool("Active", false);
+            buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
         } else {
+            buttons[index].GetComponent<Animator>().SetBool("Active", true);
+
             int matchA = firstSelectedButtonIndex;
             int matchB = index;
 
             bool isCorrect = (correctMatches.ContainsKey(matchA) && correctMatches[matchA] == matchB) || (correctMatches.ContainsKey(matchB) && correctMatches[matchB] == matchA);
 
             if (isCorrect){
-                buttons[matchA].interactable = false;
-                buttons[matchB].interactable = false;
-                buttons[matchA].GetComponent<Image>().color = Color.black;
-                buttons[matchB].GetComponent<Image>().color = Color.black;
-
-                matchCount++;
-                if (matchCount >= currentQuestion.matchPairs.Count){
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < matchData.questions.Count){
-                        LoadQuestion(currentQuestionIndex);
-                    } else {
-                        GameManager.Instance.CompleteLevel();
-                        anim.SetTrigger("End");
-                        Invoke("Hide", 0.5f);
-                    }
-                }
+                StartCoroutine(RightAnswer(matchA, matchB));
             } else {
-                buttons[matchA].GetComponent<Image>().color = Color.white;
-                buttons[matchB].GetComponent<Image>().color = Color.white;
-
-                GameManager.Instance.stars--;
-                starsText.text = "Stars: " + GameManager.Instance.stars;
-                if (GameManager.Instance.stars <= 0){
-                    GameManager.Instance.BackToGameScene();
-                    anim.SetTrigger("End");
-                    Invoke("Hide", 0.5f);
-                }
+                StartCoroutine(WrongAnswer(matchA, matchB));
             }
 
             firstSelectedButtonIndex = -1;
+        }
+    }
+
+    private IEnumerator WrongAnswer(int matchA, int matchB){
+        GameManager.Instance.stars--;
+        starsText.text = GameManager.Instance.stars.ToString();
+        starAnim.SetTrigger("Pulse");
+
+        Image imageComponentA = buttons[matchA].GetComponentInChildren<Image>();
+        Image imageComponentB = buttons[matchB].GetComponentInChildren<Image>();
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        Color startColor = Color.red;
+        Color endColor = Color.white;
+
+        while (elapsedTime < duration){
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            imageComponentA.color = Color.Lerp(startColor, endColor, t);
+            imageComponentB.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
+        }
+
+        imageComponentA.color = endColor;
+        imageComponentB.color = endColor;
+
+        buttons[matchA].GetComponent<Animator>().SetBool("Active", false);
+        buttons[matchA].GetComponent<Animator>().ResetTrigger("ButtonDown");
+        buttons[matchB].GetComponent<Animator>().SetBool("Active", false);
+        buttons[matchB].GetComponent<Animator>().ResetTrigger("ButtonDown");
+
+        if (GameManager.Instance.stars <= 0){
+            GameManager.Instance.BackToGameScene();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
+        }
+    }
+
+    private IEnumerator RightAnswer(int matchA, int matchB){
+        Image imageComponentA = buttons[matchA].GetComponentInChildren<Image>();
+        Image imageComponentB = buttons[matchB].GetComponentInChildren<Image>();
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        Color startColor = Color.green;
+        Color endColor = Color.gray;
+
+        while (elapsedTime < duration){
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            imageComponentA.color = Color.Lerp(startColor, endColor, t);
+            imageComponentB.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
+        }
+
+        imageComponentA.color = endColor;
+        imageComponentB.color = endColor;
+
+        buttons[matchA].GetComponent<Animator>().SetBool("Active", false);
+        buttons[matchA].GetComponent<Animator>().ResetTrigger("ButtonDown");
+        buttons[matchB].GetComponent<Animator>().SetBool("Active", false);
+        buttons[matchB].GetComponent<Animator>().ResetTrigger("ButtonDown");
+
+        buttons[matchA].interactable = false;
+        buttons[matchB].interactable = false;
+
+        matchCount++;
+        if (matchCount >= currentQuestion.matchPairs.Count){
+            currentQuestionIndex++;
+            if (currentQuestionIndex < matchData.questions.Count){
+                LoadQuestion(currentQuestionIndex);
+            } else {
+                GameManager.Instance.CompleteLevel();
+                anim.SetTrigger("End");
+                Invoke("Hide", 0.5f);
+            }
         }
     }
 

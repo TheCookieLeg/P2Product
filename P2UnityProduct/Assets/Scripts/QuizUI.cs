@@ -10,10 +10,14 @@ public class QuizUI : MonoBehaviour {
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI starsText;
+    [SerializeField] private Animator starAnim;
     [SerializeField] private Button backButton;
     [SerializeField] private TextMeshProUGUI questionText;
     [SerializeField] private GameObject video;
+    [SerializeField] private GameObject videoBackground;
     [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private GameObject image;
+    [SerializeField] private GameObject imageBackground;
     [SerializeField] private Button[] buttons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
 
@@ -53,7 +57,7 @@ public class QuizUI : MonoBehaviour {
         currentQuestionIndex = 0;
 
         GameManager.Instance.stars = 3;
-        starsText.text = "Stars: " + GameManager.Instance.stars;
+        starsText.text = GameManager.Instance.stars.ToString();
 
         Show();
         LoadQuestion(currentQuestionIndex);
@@ -71,35 +75,84 @@ public class QuizUI : MonoBehaviour {
 
         for (int i = 0; i < buttons.Length; i++){
             buttons[i].interactable = true;
-            buttons[i].GetComponent<Image>().color = Color.white;
+            buttons[i].GetComponentInChildren<Image>().color = Color.white;
         }
 
-        if (quizData.questions[index].videoClip != null){
-            video.gameObject.SetActive(true);
+        if (quizData.questions[index].videoClip != null && quizData.questions[index].image == null){
+            image.SetActive(false);
+            imageBackground.SetActive(false);
+            video.SetActive(true);
+            videoBackground.SetActive(true);
             videoPlayer.Play();
-        } else {
-            video.gameObject.SetActive(false);
+        } else if (quizData.questions[index].videoClip == null && quizData.questions[index].image != null){
+            image.SetActive(true);
+            imageBackground.SetActive(true);
+            image.GetComponent<Image>().sprite = quizData.questions[index].image;
+            video.SetActive(false);
+            videoBackground.SetActive(false);
             videoPlayer.Stop();
+        } else {
+            Debug.LogWarning("Question set-up incorrectly");
         }
     }
 
     private void OnAnswerClicked(int selectedIndex){
         if (!IsAnswerCorrect(selectedIndex)){
-            GameManager.Instance.stars--;
-            starsText.text = "Stars: " + GameManager.Instance.stars;
-
-            buttons[selectedIndex].interactable = false;
-            buttons[selectedIndex].GetComponent<Image>().color = Color.black;
-
-            if (GameManager.Instance.stars <= 0){
-                GameManager.Instance.BackToGameScene();
-                anim.SetTrigger("End");
-                Invoke("Hide", 0.5f);
-                return;
-            }
-
+            StartCoroutine(WrongAnswer(selectedIndex));
             return;
+        } else {
+            StartCoroutine(RightAnswer(selectedIndex));
         }
+    }
+
+    private IEnumerator WrongAnswer(int selectedIndex){
+        GameManager.Instance.stars--;
+        starsText.text = GameManager.Instance.stars.ToString();
+        starAnim.SetTrigger("Pulse");
+
+        Image imageComponent = buttons[selectedIndex].GetComponentInChildren<Image>();
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        Color startColor = Color.red;
+        Color endColor = Color.white;
+
+        while (elapsedTime < duration){
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            imageComponent.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
+        }
+
+        imageComponent.color = endColor;
+
+        if (GameManager.Instance.stars <= 0){
+            GameManager.Instance.BackToGameScene();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
+        }
+    }
+
+    private IEnumerator RightAnswer(int selectedIndex){
+        Image imageComponent = buttons[selectedIndex].GetComponentInChildren<Image>();
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        Color startColor = Color.green;
+        Color endColor = Color.white;
+
+        while (elapsedTime < duration){
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            imageComponent.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
+        }
+
+        imageComponent.color = endColor;
 
         currentQuestionIndex++;
 

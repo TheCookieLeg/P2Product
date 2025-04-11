@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c28ff23249d4514e981c39a038c1532, type: 3}
   m_Name: QuizTest
   m_EditorClassIdentifier: 
-  levelName: 
   questions:
   - questionText: Hvad ser du i videoen?
+    image: {fileID: 0}
     videoClip: {fileID: 32900000, guid: 2f0261d8001b1e6418d0785d751342f9, type: 3}
     answers:
     - Korssting
@@ -23,6 +23,7 @@ MonoBehaviour:
     - Tungesting
     correctAnswerIndex: 3
   - questionText: "Hvilken type n\xE5l er bedst at bruge til tyndt stof?"
+    image: {fileID: 21300000, guid: 4c9beb75e061b6542af27b9e0cf672ca, type: 3}
     videoClip: {fileID: 0}
     answers:
     - "En tyk n\xE5l"
@@ -31,6 +32,7 @@ MonoBehaviour:
     - "En kort n\xE5l"
     correctAnswerIndex: 2
   - questionText: Hvad er et bagsting?
+    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
     videoClip: {fileID: 0}
     answers:
     - "Et st\xE6rkt sting der minder om de sting en maskine kan lave"

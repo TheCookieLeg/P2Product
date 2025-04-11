@@ -12,7 +12,7 @@ public class ThreadSceneUI : MonoBehaviour {
 
     private void Awake(){
         håndsyButton.onClick.AddListener(() => {
-            GameManager.Instance.EnterThread(0);
+            GameManager.Instance.EnterThread();
         });
         UpdateCompletion();
     }
@@ -20,14 +20,16 @@ public class ThreadSceneUI : MonoBehaviour {
     private void Start(){
         GameManager.Instance.OnLeaveLevel += GameManager_OnLeaveLevel;
         GameManager.Instance.OnLeaveThread += GameManager_OnLeaveThread;
+        GameManager.Instance.OnResetSave += GameManager_OnResetSave;
     }
 
     private void OnDestroy(){
         GameManager.Instance.OnLeaveLevel -= GameManager_OnLeaveLevel;
         GameManager.Instance.OnLeaveThread -= GameManager_OnLeaveThread;
+        GameManager.Instance.OnResetSave -= GameManager_OnResetSave;
     }
 
-  private void GameManager_OnLeaveLevel(object sender, EventArgs e){
+    private void GameManager_OnLeaveLevel(object sender, EventArgs e){
         UpdateCompletion();
         Show();
     }
@@ -36,18 +38,22 @@ public class ThreadSceneUI : MonoBehaviour {
         Hide();
     }
 
+    private void GameManager_OnResetSave(object sender, EventArgs e){
+        UpdateCompletion();
+    }
+
     private void UpdateCompletion(){
-        int håndsyTotalStars = 0;
+        int totalStars = 0;
 
         int amountOfLevels = 8;
 
         float totalAmountOfStars = amountOfLevels * 3;
 
         for (int i = 1; i <= amountOfLevels; i++){
-            håndsyTotalStars += PlayerPrefs.GetInt("HåndsyLevel" + i + "Stars", 0);
+            totalStars += PlayerPrefs.GetInt("Level" + i + "Stars", 0);
         }
 
-        håndsyText.text = (håndsyTotalStars / totalAmountOfStars * 100).ToString("0") + "%";
+        håndsyText.text = (totalStars / totalAmountOfStars * 100).ToString("0") + "%";
     }
 
     private void Hide(){

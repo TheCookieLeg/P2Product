@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,6 +17,19 @@ public class BottomBar : MonoBehaviour {
         UpdateCompletion();
     }
 
+    private void Start(){
+        GameManager.Instance.OnRefreshLevels += GameManager_OnRefreshLevels;
+        GameManager.Instance.OnResetSave += GameManager_OnResetSave;
+    }
+
+    private void GameManager_OnRefreshLevels(object sender, EventArgs e){
+        UpdateCompletion();
+    }
+
+    private void GameManager_OnResetSave(object sender, EventArgs e){
+        UpdateCompletion();
+    }
+
     private void UpdateCompletion(){
         int håndsyTotalStars = 0;
 
@@ -24,7 +38,7 @@ public class BottomBar : MonoBehaviour {
         float totalAmountOfStars = amountOfLevels * 3;
 
         for (int i = 1; i <= amountOfLevels; i++){
-            håndsyTotalStars += PlayerPrefs.GetInt("HåndsyLevel" + i + "Stars", 0);
+            håndsyTotalStars += PlayerPrefs.GetInt("Level" + i + "Stars", 0);
         }
 
         starText.text = håndsyTotalStars + "/" + totalAmountOfStars;

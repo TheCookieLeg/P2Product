@@ -17,6 +17,7 @@ public class ProfileUI : MonoBehaviour {
 
         restartButton.onClick.AddListener(() => {
             GameManager.Instance.RestartProgress();
+            starsText.text = "0";
         });
 
         backButton.onClick.AddListener(() => {
@@ -49,15 +50,7 @@ public class ProfileUI : MonoBehaviour {
         int amountOfLevels = 8;
 
         for (int i = 1; i <= amountOfLevels; i++){
-            totalStars += PlayerPrefs.GetInt("HåndsyLevel" + i + "Stars", 0);
-        }
-
-        for (int i = 1; i <= amountOfLevels; i++){
-            totalStars += PlayerPrefs.GetInt("SymaskineLevel" + i + "Stars", 0);
-        }
-
-        for (int i = 1; i <= amountOfLevels; i++){
-            totalStars += PlayerPrefs.GetInt("LapperLevel" + i + "Stars", 0);
+            totalStars += PlayerPrefs.GetInt("Level" + i + "Stars", 0);
         }
 
         return totalStars;

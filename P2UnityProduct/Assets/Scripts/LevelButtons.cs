@@ -21,9 +21,10 @@ public class LevelButtons : MonoBehaviour {
     private int stars;
     private Button button;
     private bool unlocked = false;
+    [SerializeField] private Animator anim;
 
     private void Awake(){
-        if (levelID == 0 || levelData == null) return;
+        anim = GetComponent<Animator>();
 
         if (levelData is QuizLevelSO){
             levelTypeText.text = "QUIZ";
@@ -45,64 +46,22 @@ public class LevelButtons : MonoBehaviour {
     }
 
     private void UpdateVisuals(){
-        switch (GameManager.Instance.threadID){
-            case 0:
-                stars = PlayerPrefs.GetInt("HåndsyLevel" + levelID + "Stars", 0);
-                if (GameManager.Instance.levelsCompletedHåndsy >= levelID - 1){
-                    unlocked = true;
-                    button = unlockedButton.GetComponent<Button>();
-                    for (int i = 0; i < 3; i++){
-                        if (stars >= i + 1){
-                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
-                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
-                        } else {
-                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
-                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
-                        }
-                    }
+        stars = PlayerPrefs.GetInt("Level" + levelID + "Stars", 0);
+        if (GameManager.Instance.levelsCompleted >= levelID - 1){
+            unlocked = true;
+            button = unlockedButton.GetComponent<Button>();
+            for (int i = 0; i < 3; i++){
+                if (stars >= i + 1){
+                    starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
+                    starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
                 } else {
-                    unlocked = false;
-                    button = lockedButton.GetComponent<Button>();
+                    starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
+                    starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
                 }
-                break;
-            case 1:
-                stars = PlayerPrefs.GetInt("SymaskineLevel" + levelID + "Stars", 0);
-                if (GameManager.Instance.levelsCompletedSymaskine >= levelID - 1){
-                    unlocked = true;
-                    button = unlockedButton.GetComponent<Button>();
-                    for (int i = 0; i < 3; i++){
-                        if (stars >= i + 1){
-                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
-                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
-                        } else {
-                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
-                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
-                        }
-                    }
-                } else {
-                    unlocked = false;
-                    button = lockedButton.GetComponent<Button>();
-                }
-                break;
-            case 2:
-                stars = PlayerPrefs.GetInt("LapperLevel" + levelID + "Stars", 0);
-                if (GameManager.Instance.levelsCompletedLapper >= levelID - 1){
-                    unlocked = true;
-                    button = unlockedButton.GetComponent<Button>();
-                    for (int i = 0; i < 3; i++){
-                        if (stars >= i + 1){
-                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(false);
-                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(true);
-                        } else {
-                            starsIcons[i].transform.GetChild(0).gameObject.SetActive(true);
-                            starsIcons[i].transform.GetChild(1).gameObject.SetActive(false);
-                        }
-                    }
-                } else {
-                    unlocked = false;
-                    button = lockedButton.GetComponent<Button>();
-                }
-                break;
+            }
+        } else {
+            unlocked = false;
+            button = lockedButton.GetComponent<Button>();
         }
 
         lockedButton.SetActive(!unlocked);
@@ -122,5 +81,13 @@ public class LevelButtons : MonoBehaviour {
 
     private void GameManager_OnRefreshLevels(object sender, EventArgs e){
         UpdateVisuals();
+    }
+
+    private void FixedUpdate(){
+        if (PlayerPrefs.GetInt("LevelsCompleted") == levelID - 1){
+            anim.SetBool("Current", true);
+        } else {
+            anim.SetBool("Current", false);
+        }
     }
 }

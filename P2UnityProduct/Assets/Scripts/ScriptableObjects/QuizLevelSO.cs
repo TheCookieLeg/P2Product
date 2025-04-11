@@ -9,6 +9,7 @@ public class QuizLevelSO : BaseLevelSO {
     public class Question{
         [Header("Question Info")]
         public string questionText;
+        public Sprite image;
         public VideoClip videoClip;
 
         [Header("Answer Info")]

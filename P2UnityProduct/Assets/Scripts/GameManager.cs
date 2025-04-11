@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnEnterThread;
     public event EventHandler OnLeaveLevel;
     public event EventHandler OnLeaveThread;
+    public event EventHandler OnResetSave;
 
     [SerializeField] [Range(0.5f, 1.5f)] private float transmissionTid = 1f;
     [SerializeField] private Animator transmissionAnim;
@@ -24,16 +25,12 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public StoryLevelSO currentLevelStoryData;
 
     private int currentLevelID;
-    [HideInInspector] public int levelsCompletedHåndsy;
-    [HideInInspector] public int levelsCompletedSymaskine;
-    [HideInInspector] public int levelsCompletedLapper;
+    [HideInInspector] public int levelsCompleted;
     [HideInInspector] public int stars;
 
     [HideInInspector] public int hoverLevelID;
     [HideInInspector] public int hoverStars;
     private BaseLevelSO hoverLevelData;
-
-    [HideInInspector] public int threadID;
 
     private void Awake(){
         if (Instance != null && Instance != this){
@@ -42,9 +39,7 @@ public class GameManager : MonoBehaviour {
         }
         Instance = this;
 
-        levelsCompletedHåndsy = PlayerPrefs.GetInt("LevelsCompleted0");
-        levelsCompletedSymaskine = PlayerPrefs.GetInt("LevelsCompleted1");
-        levelsCompletedLapper = PlayerPrefs.GetInt("LevelsCompleted2");
+        levelsCompleted = PlayerPrefs.GetInt("LevelsCompleted");
     }
 
     public void EnterLevel(){
@@ -70,37 +65,13 @@ public class GameManager : MonoBehaviour {
     public void CompleteLevel(){
         OnExitToGameScene?.Invoke(this, EventArgs.Empty);
 
-        switch (threadID){
-            case 0:
-                if (currentLevelID - 1 == levelsCompletedHåndsy){
-                    levelsCompletedHåndsy++;
+        if (currentLevelID - 1 == levelsCompleted){ // Klaret den bane man var kommet
+            levelsCompleted++;
 
-                    PlayerPrefs.SetInt("LevelsCompleted" + threadID, levelsCompletedHåndsy);
-                    PlayerPrefs.SetInt("HåndsyLevel" + currentLevelID + "Stars", stars);
-                } else if (PlayerPrefs.GetInt("HåndsyLevel" + currentLevelID + "Stars") < stars){
-                    PlayerPrefs.SetInt("HåndsyLevel" + currentLevelID + "Stars", stars);
-                }
-                break;
-            case 1:
-                if (currentLevelID - 1 == levelsCompletedSymaskine){
-                    levelsCompletedSymaskine++;
-
-                    PlayerPrefs.SetInt("LevelsCompleted" + threadID, levelsCompletedSymaskine);
-                    PlayerPrefs.SetInt("SymaskineLevel" + currentLevelID + "Stars", stars);
-                } else if (PlayerPrefs.GetInt("SymaskineLevel" + currentLevelID + "Stars") < stars){
-                    PlayerPrefs.SetInt("SymaskineLevel" + currentLevelID + "Stars", stars);
-                }
-                break;
-            case 2:
-                if (currentLevelID - 1 == levelsCompletedLapper){
-                    levelsCompletedLapper++;
-
-                    PlayerPrefs.SetInt("LevelsCompleted" + threadID, levelsCompletedLapper);
-                    PlayerPrefs.SetInt("LapperLevel" + currentLevelID + "Stars", stars);
-                } else if (PlayerPrefs.GetInt("LapperLevel" + currentLevelID + "Stars") < stars){
-                    PlayerPrefs.SetInt("LapperLevel" + currentLevelID + "Stars", stars);
-                }
-                break;
+            PlayerPrefs.SetInt("LevelsCompleted", levelsCompleted);
+            PlayerPrefs.SetInt("Level" + currentLevelID + "Stars", stars);
+        } else if (PlayerPrefs.GetInt("Level" + currentLevelID + "Stars") < stars){ // Har ny rekord på en bane
+            PlayerPrefs.SetInt("Level" + currentLevelID + "Stars", stars);
         }
 
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
@@ -120,42 +91,32 @@ public class GameManager : MonoBehaviour {
     }
 
     public void RestartProgress(){
-        levelsCompletedHåndsy = 0;
-        levelsCompletedSymaskine = 0;
-        levelsCompletedLapper = 0;
+        levelsCompleted = 0;
         PlayerPrefs.DeleteAll();
         
+        OnResetSave?.Invoke(this, EventArgs.Empty);
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
     }
 
     public void HoverLevel(int levelID, BaseLevelSO levelData){
         hoverLevelID = levelID;
         hoverLevelData = levelData;
-        switch (threadID){
-            case 0:
-                hoverStars = PlayerPrefs.GetInt("HåndsyLevel" + levelID + "Stars");
-                break;
-            case 1:
-                hoverStars = PlayerPrefs.GetInt("SymaskineLevel" + levelID + "Stars");
-                break;
-            case 2:
-                hoverStars = PlayerPrefs.GetInt("LapperLevel" + levelID + "Stars");
-                break;
-        }
+
+        hoverStars = PlayerPrefs.GetInt("Level" + levelID + "Stars");
+
         OnHoverLevel?.Invoke(this, EventArgs.Empty);
     }
 
-    public void EnterThread(int chosenThreadID){
-        StartCoroutine(EnterThreadDelay(chosenThreadID));
+    public void EnterThread(){
+        StartCoroutine(EnterThreadDelay());
     }
 
-    private IEnumerator EnterThreadDelay(int chosenThreadID){
+    private IEnumerator EnterThreadDelay(){
         transmissionAnim.SetTrigger("Close");
 
         yield return new WaitForSeconds(transmissionTid);
 
         transmissionAnim.SetTrigger("Open");
-        threadID = chosenThreadID;
         OnLeaveThread?.Invoke(this, EventArgs.Empty);
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
         OnEnterThread?.Invoke(this, EventArgs.Empty);

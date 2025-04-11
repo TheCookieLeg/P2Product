@@ -9,6 +9,7 @@ using System.Linq;
 public class StoryUI : MonoBehaviour {
 
     [SerializeField] private TextMeshProUGUI starsText;
+    [SerializeField] private Animator starAnim;
     [SerializeField] private Button backButton;
     [SerializeField] private Button confirmButton;
     [SerializeField] private Transform answersParent;
@@ -55,7 +56,7 @@ public class StoryUI : MonoBehaviour {
         currentQuestionIndex = 0;
 
         GameManager.Instance.stars = 3;
-        starsText.text = "Stars: " + GameManager.Instance.stars;
+        starsText.text = GameManager.Instance.stars.ToString();
 
         Show();
         LoadQuestion(currentQuestionIndex);
@@ -74,7 +75,7 @@ public class StoryUI : MonoBehaviour {
             answerImages[i].sprite = currentQuestion.answers[i]; // Keep correct order here
             answerImages[i].gameObject.name = i.ToString(); // Restore original index name if needed
             buttons[i].interactable = true;
-            buttons[i].GetComponent<Image>().color = Color.white;
+            buttons[i].GetComponentInChildren<Image>().color = Color.white;
         }
 
         firstSelectedIndex = -1;
@@ -83,10 +84,11 @@ public class StoryUI : MonoBehaviour {
     private void OnButtonClicked(int index){
         if (firstSelectedIndex == -1){
             firstSelectedIndex = index;
-            buttons[index].GetComponent<Image>().color = Color.green;
+            buttons[index].GetComponent<Animator>().SetBool("Active", true);
         } else if (firstSelectedIndex == index){
-            buttons[index].GetComponent<Image>().color = Color.white;
             firstSelectedIndex = -1;
+            buttons[index].GetComponent<Animator>().SetBool("Active", false);
+            buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
         } else {
             Transform first = buttons[firstSelectedIndex].transform;
             Transform second = buttons[index].transform;
@@ -94,10 +96,15 @@ public class StoryUI : MonoBehaviour {
             int firstSibling = first.GetSiblingIndex();
             int secondSibling = second.GetSiblingIndex();
 
+            buttons[firstSelectedIndex].GetComponent<Animator>().SetBool("Active", false);
+            buttons[firstSelectedIndex].GetComponent<Animator>().ResetTrigger("ButtonDown");
+            buttons[index].GetComponent<Animator>().SetBool("Active", false);
+            buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
+
             first.SetSiblingIndex(secondSibling);
             second.SetSiblingIndex(firstSibling);
 
-            buttons[firstSelectedIndex].GetComponent<Image>().color = Color.white;
+            buttons[firstSelectedIndex].GetComponentInChildren<Image>().color = Color.white;
             firstSelectedIndex = -1;
         }
     }
@@ -105,23 +112,69 @@ public class StoryUI : MonoBehaviour {
     private void OnConfirmClicked(){
         bool isCorrect = true;
 
+        List<int> rightAnswers = new List<int>(6);
         for (int i = 0; i < buttons.Length; i++){
             int buttonIndex = buttons[i].transform.GetSiblingIndex();
 
             if (answerImages[buttonIndex].sprite != currentQuestion.answers[i]){
-                Debug.Log("Answer " + (i + 1) + " is wrong");
                 isCorrect = false;
             } else {
-                Debug.Log("Answer " + (i + 1) + " is correct");
+                rightAnswers.Add(i);
+            }
+        }
+
+        StartCoroutine(Answer(rightAnswers, isCorrect));
+    }
+
+    private IEnumerator Answer(List<int> rightAnswers, bool isCorrect){
+        if (!isCorrect){
+            GameManager.Instance.stars--;
+            starsText.text = GameManager.Instance.stars.ToString();
+            starAnim.SetTrigger("Pulse");
+        }
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        Color correctStartColor = Color.green;
+        Color wrongStartColor = Color.red;
+        Color correctEndColor = Color.gray;
+        Color wrongEndColor = Color.white;
+
+        for (int i = 0; i < buttons.Length; i++){
+            if (rightAnswers.Contains(i)){
+                buttons[i].GetComponentInChildren<Image>().color = correctEndColor;
+            } else {
+                buttons[i].GetComponentInChildren<Image>().color = wrongStartColor;
+            }
+        }
+
+        while (elapsedTime < duration){
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            for (int i = 0; i < buttons.Length; i++){
+                if (rightAnswers.Contains(i)){
+                    buttons[i].GetComponentInChildren<Image>().color = Color.Lerp(correctStartColor, correctEndColor, t);
+                } else {
+                    buttons[i].GetComponentInChildren<Image>().color = Color.Lerp(wrongStartColor, wrongEndColor, t);
+                }
+            }
+
+            yield return null;
+        }
+
+        for (int i = 0; i < buttons.Length; i++){
+            if (rightAnswers.Contains(i)){
+                buttons[i].GetComponentInChildren<Image>().color = correctEndColor;
                 buttons[i].interactable = false;
-                buttons[i].GetComponent<Image>().color = Color.black;
+            } else {
+                buttons[i].GetComponentInChildren<Image>().color = wrongEndColor;
             }
         }
 
         if (isCorrect){
-            Debug.Log("Correct order!");
             currentQuestionIndex++;
-
             if (currentQuestionIndex < storyData.questions.Count){
                 LoadQuestion(currentQuestionIndex);
             } else {
@@ -130,15 +183,10 @@ public class StoryUI : MonoBehaviour {
                 Invoke("Hide", 0.5f);
             }
         } else {
-            Debug.Log("Incorrect order!");
-            GameManager.Instance.stars--;
-            starsText.text = "Stars: " + GameManager.Instance.stars;
-
             if (GameManager.Instance.stars <= 0){
                 GameManager.Instance.BackToGameScene();
                 anim.SetTrigger("End");
                 Invoke("Hide", 0.5f);
-                return;
             }
         }
     }

@@ -12,8 +12,6 @@ public class LevelSceneUI : MonoBehaviour {
     [SerializeField] private Button hoverBackButton;
     [SerializeField] private TextMeshProUGUI hoverLevelText;
     [SerializeField] private GameObject hoverUI;
-    [SerializeField] private TextMeshProUGUI threadText;
-    [SerializeField] private GameObject[] levels;
     [SerializeField] private Transform[] hoverLevelStars;
 
     private Animator anim;
@@ -65,30 +63,10 @@ public class LevelSceneUI : MonoBehaviour {
     private void GameManager_OnEnterThread(object sender, EventArgs e){
         hoverUI.SetActive(false);
         Show();
-        UpdateUI();
     }
 
     private void GameManager_OnLeaveLevel(object sender, EventArgs e){
         Hide();
-    }
-
-    private void UpdateUI(){
-        switch (GameManager.Instance.threadID){
-            case 0:
-                threadText.text = "HÅNDSY";
-                break;
-            case 1:
-                threadText.text = "SYMASKINE";
-                break;
-            case 2:
-                threadText.text = "LAPPER";
-                break;
-        }
-
-        foreach (GameObject level in levels){
-            level.SetActive(false);
-        }
-        levels[GameManager.Instance.threadID].SetActive(true);
     }
 
     private void GameManager_OnHoverLevel(object sender, EventArgs e){
