@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public QuizLevelSO currentLevelQuizData;
     [HideInInspector] public MatchLevelSO currentLevelMatchData;
     [HideInInspector] public StoryLevelSO currentLevelStoryData;
+    [HideInInspector] public GameLevelSO currentLevelGameData;
 
     private int currentLevelID;
     [HideInInspector] public int levelsCompleted;
@@ -54,14 +55,28 @@ public class GameManager : MonoBehaviour {
             currentLevelQuizData = quizData;
             currentLevelMatchData = null;
             currentLevelStoryData = null;
+            currentLevelGameData = null;
         } else if (hoverLevelData is MatchLevelSO matchData){
+            currentLevelQuizData = null;
             currentLevelMatchData = matchData;
-            currentLevelQuizData = null;
             currentLevelStoryData = null;
+            currentLevelGameData = null;
         } else if (hoverLevelData is StoryLevelSO storyData){
-            currentLevelStoryData = storyData;
-            currentLevelMatchData = null;
             currentLevelQuizData = null;
+            currentLevelMatchData = null;
+            currentLevelStoryData = storyData;
+            currentLevelGameData = null;
+        } else if (hoverLevelData is GameLevelSO gameData){
+            currentLevelQuizData = null;
+            currentLevelMatchData = null;
+            currentLevelStoryData = null;
+            currentLevelGameData = gameData;
+        } else {
+            currentLevelQuizData = null;
+            currentLevelMatchData = null;
+            currentLevelStoryData = null;
+            currentLevelGameData = null;
+            Debug.LogWarning("Level not found");
         }
 
         OnEnterLevel?.Invoke(this, EventArgs.Empty);
