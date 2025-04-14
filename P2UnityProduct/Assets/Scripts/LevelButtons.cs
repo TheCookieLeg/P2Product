@@ -68,6 +68,9 @@ public class LevelButtons : MonoBehaviour {
         unlockedButton.SetActive(unlocked);
 
         button.onClick.AddListener(() => {
+            if (GameManager.Instance.canClickTimer > 0) return;
+            GameManager.Instance.canClickTimer = 0.25f;
+
             if (levelID == 0 || levelData == null){
                 Debug.LogWarning("Levelet er ikke sat op endnu");
                 return;

@@ -80,6 +80,9 @@ public class MatchUI : MonoBehaviour {
     }
 
     private void OnButtonClicked(int index){
+        if (GameManager.Instance.canClickTimer > 0) return;
+        GameManager.Instance.canClickTimer = 0.5f;
+
         if (firstSelectedButtonIndex == -1){
             firstSelectedButtonIndex = index;
             buttons[index].GetComponent<Animator>().SetBool("Active", true);

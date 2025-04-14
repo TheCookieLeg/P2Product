@@ -82,6 +82,9 @@ public class StoryUI : MonoBehaviour {
     }
 
     private void OnButtonClicked(int index){
+        if (GameManager.Instance.canClickTimer > 0) return;
+        GameManager.Instance.canClickTimer = 0.5f;
+
         if (firstSelectedIndex == -1){
             firstSelectedIndex = index;
             buttons[index].GetComponent<Animator>().SetBool("Active", true);

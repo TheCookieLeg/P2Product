@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public int hoverLevelID;
     [HideInInspector] public int hoverStars;
     private BaseLevelSO hoverLevelData;
+    public float canClickTimer;
 
     private void Awake(){
         if (Instance != null && Instance != this){
@@ -42,7 +43,11 @@ public class GameManager : MonoBehaviour {
         levelsCompleted = PlayerPrefs.GetInt("LevelsCompleted");
     }
 
-    public void EnterLevel(){
+    private void Update(){
+        if (canClickTimer > 0) canClickTimer -= Time.deltaTime;
+    }
+
+  public void EnterLevel(){
         currentLevelID = hoverLevelID;
 
         if (hoverLevelData is QuizLevelSO quizData){

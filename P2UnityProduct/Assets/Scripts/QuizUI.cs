@@ -97,6 +97,9 @@ public class QuizUI : MonoBehaviour {
     }
 
     private void OnAnswerClicked(int selectedIndex){
+        if (GameManager.Instance.canClickTimer > 0) return;
+        GameManager.Instance.canClickTimer = 0.5f;
+
         if (!IsAnswerCorrect(selectedIndex)){
             StartCoroutine(WrongAnswer(selectedIndex));
             return;

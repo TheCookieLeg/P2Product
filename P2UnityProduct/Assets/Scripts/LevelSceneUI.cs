@@ -35,6 +35,9 @@ public class LevelSceneUI : MonoBehaviour {
             GameManager.Instance.LeaveLevel();
         });
         hoverBackButton.onClick.AddListener(() => {
+            if (GameManager.Instance.canClickTimer > 0) return;
+            GameManager.Instance.canClickTimer = 0.25f;
+
             hoverUI.GetComponent<Animator>().SetTrigger("End");
             Invoke("HideHover", 0.5f);
         });
