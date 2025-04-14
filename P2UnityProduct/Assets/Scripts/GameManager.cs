@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnLeaveLevel;
     public event EventHandler OnLeaveThread;
     public event EventHandler OnResetSave;
+    public event EventHandler OnEnterTrophies;
+    public event EventHandler OnOpenTrophy;
 
     [SerializeField] [Range(0.5f, 1.5f)] private float transmissionTid = 1f;
     [SerializeField] private Animator transmissionAnim;
@@ -32,7 +34,10 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public int hoverLevelID;
     [HideInInspector] public int hoverStars;
     private BaseLevelSO hoverLevelData;
-    public float canClickTimer;
+
+    [HideInInspector] public TrophySO currentTrophyData;
+
+    [HideInInspector] public float canClickTimer;
 
     private void Awake(){
         if (Instance != null && Instance != this){
@@ -79,11 +84,31 @@ public class GameManager : MonoBehaviour {
             Debug.LogWarning("Level not found");
         }
 
+        if (PlayerPrefs.GetInt("Trophy1") == 0){
+            CompleteTrophy(1);
+        }
+
         OnEnterLevel?.Invoke(this, EventArgs.Empty);
     }
 
     public void CompleteLevel(){
         OnExitToGameScene?.Invoke(this, EventArgs.Empty);
+
+        if (PlayerPrefs.GetInt("Trophy2") == 0){
+            CompleteTrophy(2);
+        }
+
+        if (stars == 3 && PlayerPrefs.GetInt("Trophy3") == 0){
+            CompleteTrophy(3);
+        }
+
+        // if (BOSSBANE KLARET NOGET && PlayerPrefs.GetInt("Trophy4") == 0){
+        //     CompleteTrophy(4);
+        // }
+
+        if (GetTotalStars() == 24 && PlayerPrefs.GetInt("Trophy5") == 0){
+            CompleteTrophy(5);
+        }
 
         if (currentLevelID - 1 == levelsCompleted){ // Klaret den bane man var kommet
             levelsCompleted++;
@@ -153,5 +178,31 @@ public class GameManager : MonoBehaviour {
 
         transmissionAnim.SetTrigger("Open");
         OnLeaveLevel?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void EnterTrophies(){
+        OnEnterTrophies?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void OpenTrophy(TrophySO trophyData){
+        currentTrophyData = trophyData;
+        OnOpenTrophy?.Invoke(this, EventArgs.Empty);
+    }
+
+    public int GetTotalStars(){
+        int totalStars = 0;
+
+        int amountOfLevels = 8;
+
+        for (int i = 1; i <= amountOfLevels; i++){
+            totalStars += PlayerPrefs.GetInt("Level" + i + "Stars", 0);
+        }
+
+        return totalStars;
+    }
+
+    private void CompleteTrophy(int trophyID){
+        PlayerPrefs.SetInt("Trophy" + trophyID, 1);
+        // TROPHY POP-UP
     }
 }

@@ -9,6 +9,7 @@ public class ProfileUI : MonoBehaviour {
 
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backButton;
+    [SerializeField] private Button trophiesButton;
     [SerializeField] private TextMeshProUGUI starsText;
     private Animator anim;
 
@@ -26,7 +27,11 @@ public class ProfileUI : MonoBehaviour {
             Invoke("Hide", 0.6f);
         });
 
-        starsText.text = AmountOfStars().ToString();
+        trophiesButton.onClick.AddListener(() => {
+            GameManager.Instance.EnterTrophies();
+        });
+
+        starsText.text = GameManager.Instance.GetTotalStars().ToString();
     }
 
     private void Start(){
@@ -40,20 +45,8 @@ public class ProfileUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterProfile(object sender, EventArgs e){
-        starsText.text = AmountOfStars().ToString();
+        starsText.text = GameManager.Instance.GetTotalStars().ToString();
         Show();
-    }
-
-    private int AmountOfStars(){
-        int totalStars = 0;
-
-        int amountOfLevels = 8;
-
-        for (int i = 1; i <= amountOfLevels; i++){
-            totalStars += PlayerPrefs.GetInt("Level" + i + "Stars", 0);
-        }
-
-        return totalStars;
     }
 
     private void Hide(){

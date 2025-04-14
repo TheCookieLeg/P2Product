@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Quiz Question", menuName = "Levels/Story")]
+[CreateAssetMenu(fileName = "New Story Question", menuName = "Levels/Story")]
 public class StoryLevelSO : BaseLevelSO {
 
     [System.Serializable]
