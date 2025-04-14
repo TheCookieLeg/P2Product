@@ -38,7 +38,7 @@ public class Dragging : MonoBehaviour
             Debug.Log("I GOT TOUCHED");
             if (spawner != null)
             {
-                spawner.GetComponent<FabricMovement>().StartMovement();
+                spawner.GetComponent<FabricMovement>().enabled = true;
             }
             Touch touch = Input.GetTouch(0); // Gets info on the first finger that touches the screen (struct variable)
 
@@ -63,6 +63,10 @@ public class Dragging : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
+                if (spawner != null)
+                {
+                    spawner.GetComponent<FabricMovement>().enabled = false;
+                }
                 isDragging = false;
             }
         }

@@ -11,7 +11,6 @@ public class FabricSpawner : MonoBehaviour
 
     private List<GameObject> fabricPositions = new List<GameObject>();
     private int nextScorerIndex = 0;
-    private int index = 0;
     
     private int scorerBaseIndex = 0;
     private bool moveForward = true;
