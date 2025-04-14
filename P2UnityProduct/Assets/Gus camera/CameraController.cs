@@ -9,10 +9,15 @@ using UnityEngine.Android;
 
 public class CameraController : MonoBehaviour
 {
-    // ok, so I have pasted a shit ton of android permision stuff... Do I know how it works? NO!
+    private WebCamTexture webcam = null;
+    [SerializeField] private RawImage image;
+
+    // Image rotation
+    Vector3 rotationVector = new Vector3(0f, 0f, 0f);
+
         private void AskCameraPermission()
     {
-        var callbacks = new PermissionCallbacks();
+        PermissionCallbacks callbacks = new PermissionCallbacks();
         callbacks.PermissionDenied += PermissionCallbacksPermissionDenied;
         callbacks.PermissionGranted += PermissionCallbacksPermissionGranted;
         Permission.RequestUserPermission(Permission.Camera, callbacks);
@@ -30,7 +35,11 @@ public class CameraController : MonoBehaviour
     private IEnumerator DelayedCameraInitialization()
     {
         yield return null;
-        InitializeCamera();
+        
+        webcam = new WebCamTexture();
+        image.texture = webcam;
+
+        webcam.Play();
     }
 
 
@@ -39,11 +48,11 @@ public class CameraController : MonoBehaviour
         var callbacks = new PermissionCallbacks();
         Permission.RequestUserPermission(Permission.ExternalStorageWrite, callbacks);
     }
-    private void AskStorageReadPermission()
-    {
-        var callbacks = new PermissionCallbacks();
-        Permission.RequestUserPermission(Permission.ExternalStorageRead, callbacks);
-    }
+    // private void AskStorageReadPermission()
+    // {
+    //     var callbacks = new PermissionCallbacks();
+    //     Permission.RequestUserPermission(Permission.ExternalStorageRead, callbacks);
+    // }
 
     void Start()
     {
@@ -52,40 +61,46 @@ public class CameraController : MonoBehaviour
         {
             AskCameraPermission();
         }
-        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        // {
-        //     AskStorageWritePermission();
-        // }
+        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        {
+            AskStorageWritePermission();
+        }
         // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
         // {
         //     AskStorageReadPermission();
         // }
 
-        InitializeCamera();
+        //InitializeCamera();
+        StartCoroutine(DelayedCameraInitialization());
     }
 
-    // From this point on I kinda know what is going on!
+    private void FormatCameraTexture(WebCamTexture webcam) {
+        // Skip making adjustment for incorrect camera data
+        // if (webcam.width < 100)
+        // {
+        //     Debug.Log("Still waiting another frame for correct info...");
+        //     return;
+        // }
 
-    private WebCamTexture webcam;
-    [SerializeField] private RawImage image;
-    void InitializeCamera()
-    {
-        //finds a camera and shows the output as a texture
-        webcam = new WebCamTexture();
-        image.texture = webcam;
-        webcam.Play();
+        // Rotate image to show correct orientation 
+        rotationVector.z = -webcam.videoRotationAngle;
+        image.rectTransform.localEulerAngles = rotationVector;
+
+        // if (webcam.width / webcam.height != 3/4) {
+        //     Debug.Log("Camera ratio " + webcam.width + "/" + webcam.height + "doesn't fit design. Streched to fit.");
+        // }
+        image.rectTransform.sizeDelta = new Vector2(3,4) * 100;
+        
     }
 
     public void TakePicture() {
+        if (webcam == null) {
+            return;
+        }
         Texture2D photo = new Texture2D(webcam.width, webcam.height);
         photo.SetPixels(webcam.GetPixels());
         photo.Apply();
 
-
-        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        {
-            AskStorageWritePermission();
-        }
         if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
         {
             // This should save the picture on the device 
@@ -95,15 +110,17 @@ public class CameraController : MonoBehaviour
             File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
             Debug.Log("Saved: " + Application.persistentDataPath + fileName);
         }
-
     }
 
     void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount == 1) {
-            Debug.Log("space!");
-            TakePicture();
+    {   
+        if (webcam != null) {
+            FormatCameraTexture(webcam);
+
+            if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount == 1) {
+                Debug.Log("input rescieved!");
+                TakePicture();
+            }
         }
     }
-
 }
