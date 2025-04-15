@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class LevelButtons : MonoBehaviour {
 
+    [SerializeField] private bool progressive;
+
     [Header("Level Info")]
     [SerializeField] private int levelID = 0;
     [SerializeField] private BaseLevelSO levelData;
@@ -49,7 +51,7 @@ public class LevelButtons : MonoBehaviour {
 
     private void UpdateVisuals(){
         stars = PlayerPrefs.GetInt("Level" + levelID + "Stars", 0);
-        if (GameManager.Instance.levelsCompleted >= levelID - 1){
+        if (GameManager.Instance.levelsCompleted >= levelID - 1 || !progressive){
             unlocked = true;
             button = unlockedButton.GetComponent<Button>();
             for (int i = 0; i < 3; i++){
@@ -89,6 +91,8 @@ public class LevelButtons : MonoBehaviour {
     }
 
     private void FixedUpdate(){
+        if (!progressive) return;
+
         if (PlayerPrefs.GetInt("LevelsCompleted") == levelID - 1){
             anim.SetBool("Current", true);
         } else {

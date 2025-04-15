@@ -556,6 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ce52f251dd64869a9356b7f2bbfebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progressive: 1
   levelID: 8
   levelData: {fileID: 0}
   lockedButton: {fileID: 1473627031378066886}
