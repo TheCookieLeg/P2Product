@@ -38,6 +38,10 @@ public class CameraController : MonoBehaviour
 
     private void CameraInitialization() {
         
+        Debug.Log("waiting for next frame...");
+        //yield return null;
+
+        Debug.Log("Initializing Camera...");
         webcam = new WebCamTexture();
         image.texture = webcam;
 
@@ -57,12 +61,16 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("script has started...");
         //checks if we have permission for camera and storage, and asks for them if we don't
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
+            
+            Debug.Log("asking for camera permission...");
             AskCameraPermission();
         }
         
+        Debug.Log("we have camera permissions...");
             // The following code is only relevant if we  decide to save pictures on users devices
         // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
         // {
