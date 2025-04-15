@@ -69,6 +69,38 @@ public class Dragging : MonoBehaviour
                 }
                 isDragging = false;
             }
+        } else {
+            if (Input.GetMouseButtonDown(0))
+            {
+                UnityEngine.Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new UnityEngine.Vector3(Input.mousePosition.x, Input.mousePosition.y, zDepth));
+                UnityEngine.Vector2 mouseWorldPos2D = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos2D, UnityEngine.Vector2.zero);
+
+                if (hit.collider != null && hit.transform == transform)
+                {
+                    isDragging = true;
+                    offset = transform.position - (UnityEngine.Vector3)mouseWorldPos2D;
+
+                    if (spawner != null)
+                    {
+                        spawner.GetComponent<FabricMovement>().enabled = true;
+                    }
+                }
+            }
+            else if (Input.GetMouseButton(0) && isDragging)
+            {
+                UnityEngine.Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new UnityEngine.Vector3(Input.mousePosition.x, Input.mousePosition.y, zDepth));
+                UnityEngine.Vector3 targetPos = new UnityEngine.Vector3(mouseWorldPos.x + offset.x, mouseWorldPos.y + offset.y, mouseWorldPos.z + offset.z);
+                transform.position = UnityEngine.Vector3.Lerp(transform.position, targetPos, 0.4f);
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                if (spawner != null)
+                {
+                    spawner.GetComponent<FabricMovement>().enabled = false;
+                }
+                isDragging = false;
+            }
         }
     }
 
