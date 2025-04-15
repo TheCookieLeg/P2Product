@@ -6,7 +6,6 @@ public class FabricSpawner : MonoBehaviour
 {
     public GameObject fabric;
     public GameObject Scorer;
-    [SerializeField] private GameUI gameUIScript;
     [SerializeField, Tooltip("The distance between each piece of fabric")] private float distance = 1f;
     [SerializeField, Tooltip("Number of fabrics to spawn")] private int repetitions;
 
@@ -33,7 +32,6 @@ public class FabricSpawner : MonoBehaviour
         if (scorerBaseIndex < 0 || scorerBaseIndex + 1 >= fabricPositions.Count)
         {
             Debug.LogWarning("Out of bounds - can't spawn scorer.");
-            gameUIScript.Exit();
             return;
         }
 
