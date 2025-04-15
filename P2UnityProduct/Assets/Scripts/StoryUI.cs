@@ -13,6 +13,7 @@ public class StoryUI : MonoBehaviour {
     [SerializeField] private Button backButton;
     [SerializeField] private Button confirmButton;
     [SerializeField] private Transform answersParent;
+    [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
     [SerializeField] private Button[] buttons;
     [SerializeField] private Image[] answerImages;
 
@@ -92,7 +93,6 @@ public class StoryUI : MonoBehaviour {
             buttons[index].GetComponent<Animator>().SetBool("Active", false);
             buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
         } else {
-            GameManager.Instance.canClickTimer = 0.5f;
             Transform first = buttons[firstSelectedIndex].transform;
             Transform second = buttons[index].transform;
 
@@ -109,10 +109,20 @@ public class StoryUI : MonoBehaviour {
 
             buttons[firstSelectedIndex].GetComponentInChildren<Image>().color = Color.white;
             firstSelectedIndex = -1;
+
+            Invoke("FixBug", 0.08f);
         }
     }
 
+    private void FixBug(){
+        verticalLayoutGroup.spacing = 20.1f;
+        verticalLayoutGroup.spacing = 20f;
+    }
+
     private void OnConfirmClicked(){
+        if (GameManager.Instance.canClickTimer > 0) return;
+        GameManager.Instance.canClickTimer = 0.5f;
+
         bool isCorrect = true;
 
         List<int> rightAnswers = new List<int>(6);
