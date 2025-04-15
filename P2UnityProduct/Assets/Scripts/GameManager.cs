@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public MatchLevelSO currentLevelMatchData;
     [HideInInspector] public StoryLevelSO currentLevelStoryData;
     [HideInInspector] public GameLevelSO currentLevelGameData;
+    [HideInInspector] public BossLevelSO currentLevelBossData;
 
     private int currentLevelID;
     [HideInInspector] public int levelsCompleted;
@@ -68,27 +69,38 @@ public class GameManager : MonoBehaviour {
             currentLevelMatchData = null;
             currentLevelStoryData = null;
             currentLevelGameData = null;
+            currentLevelBossData = null;
         } else if (hoverLevelData is MatchLevelSO matchData){
             currentLevelQuizData = null;
             currentLevelMatchData = matchData;
             currentLevelStoryData = null;
             currentLevelGameData = null;
+            currentLevelBossData = null;
         } else if (hoverLevelData is StoryLevelSO storyData){
             currentLevelQuizData = null;
             currentLevelMatchData = null;
             currentLevelStoryData = storyData;
             currentLevelGameData = null;
+            currentLevelBossData = null;
         } else if (hoverLevelData is GameLevelSO gameData){
             currentLevelQuizData = null;
             currentLevelMatchData = null;
             currentLevelStoryData = null;
             currentLevelGameData = gameData;
+            currentLevelBossData = null;
+        } else if (hoverLevelData is BossLevelSO bossData){
+            currentLevelQuizData = null;
+            currentLevelMatchData = null;
+            currentLevelStoryData = null;
+            currentLevelGameData = null;
+            currentLevelBossData = bossData;
         } else {
             currentLevelQuizData = null;
             currentLevelMatchData = null;
             currentLevelStoryData = null;
             currentLevelGameData = null;
-            Debug.LogWarning("Level not found");
+            currentLevelGameData = null;
+            Debug.LogWarning("Level type not found");
         }
 
         // if (PlayerPrefs.GetInt("Trophy1") == 0){

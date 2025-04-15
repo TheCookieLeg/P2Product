@@ -1,13 +1,13 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameUI : MonoBehaviour {
+public class BossUI : MonoBehaviour {
 
     [SerializeField] private Button backButton;
-    [SerializeField] private Button beatLevelButton;
 
     private Animator anim;
 
@@ -16,12 +16,6 @@ public class GameUI : MonoBehaviour {
 
         backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
-            anim.SetTrigger("Needle End");
-            Invoke("Hide", 0.5f);
-        });
-
-        beatLevelButton.onClick.AddListener(() => {
-            GameManager.Instance.CompleteLevel();
             anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
         });
@@ -37,12 +31,9 @@ public class GameUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        if (GameManager.Instance.currentLevelGameData == null) return;
-
-        GameManager.Instance.stars = 3;
+        if (GameManager.Instance.currentLevelBossData == null) return;
 
         Show();
-        anim.SetTrigger("Needle Start");
     }
 
     private void Hide(){

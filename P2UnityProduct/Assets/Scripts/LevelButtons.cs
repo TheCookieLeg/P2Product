@@ -36,6 +36,8 @@ public class LevelButtons : MonoBehaviour {
             levelTypeText.text = "STORY";
         } else if (levelData is GameLevelSO){
             levelTypeText.text = "GAME";
+        } else if (levelData is BossLevelSO){
+            levelTypeText.text = "BOSS";
         }
     }
 
