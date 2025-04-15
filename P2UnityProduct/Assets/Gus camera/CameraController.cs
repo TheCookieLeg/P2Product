@@ -12,16 +12,12 @@ using System.Numerics;
 public class CameraController : MonoBehaviour
 {
     private WebCamTexture webcam = null;
-    [SerializeField] private RawImage image;
-    [SerializeField] private RawImage pictureTakenDisplay;    
-    UnityEngine.Vector2 cameraPreviewSize = new UnityEngine.Vector2(3,4) * 300;
-    UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
-
-
-    // Image rotation
-    UnityEngine.Vector3 rotationVector = new UnityEngine.Vector3(0f, 0f, 0f);
-
-        private void AskCameraPermission()
+    [SerializeField] private RawImage image; // display area for camera output
+    [SerializeField] private RawImage pictureTakenDisplay; // display area for picture taken
+    [SerializeField] private UnityEngine.Vector2 cameraPreviewSize = new UnityEngine.Vector2(3,4) * 300;
+    [SerializeField] private UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
+    
+    private void AskCameraPermission()
     {
         PermissionCallbacks callbacks = new PermissionCallbacks();
         callbacks.PermissionDenied += PermissionCallbacksPermissionDenied;
@@ -38,8 +34,7 @@ public class CameraController : MonoBehaviour
         Debug.LogWarning($"Permission {permissionName} Denied");
     }
 
-    private IEnumerator DelayedCameraInitialization()
-    {
+    private IEnumerator DelayedCameraInitialization() {
         yield return null;
         
         webcam = new WebCamTexture();
@@ -47,8 +42,7 @@ public class CameraController : MonoBehaviour
 
         webcam.Play();
     }
-
-
+        // The following code is only relevant if we  decide to save pictures on users devices
     // private void AskStorageWritePermission()
     // {
     //     var callbacks = new PermissionCallbacks();
@@ -67,6 +61,7 @@ public class CameraController : MonoBehaviour
         {
             AskCameraPermission();
         }
+            // The following code is only relevant if we  decide to save pictures on users devices
         // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
         // {
         //     AskStorageWritePermission();
@@ -80,23 +75,16 @@ public class CameraController : MonoBehaviour
         StartCoroutine(DelayedCameraInitialization());
     }
     private void FormatCameraTexture(WebCamTexture webcam, RawImage image, UnityEngine.Vector2 size) {
-
         // Rotate image to show correct orientation 
+        UnityEngine.Vector3 rotationVector = new UnityEngine.Vector3(0f, 0f, 0f);
         rotationVector.z = -webcam.videoRotationAngle;
         image.rectTransform.localEulerAngles = rotationVector;
 
+        // resize image are to fit new rotation (rotate 2d vector formula)
         UnityEngine.Vector2 newSize = new UnityEngine.Vector2(
             Mathf.Cos(Mathf.Deg2Rad * rotationVector.z) * size.x - Mathf.Sin(Mathf.Deg2Rad * rotationVector.z) * size.y,
             Mathf.Sin(Mathf.Deg2Rad * rotationVector.z) * size.x + Mathf.Cos(Mathf.Deg2Rad * rotationVector.z) * size.y); 
-        
-        // image.rectTransform.sizeDelta = Quaternion.AngleAxis(rotationVector.z, image.rectTransform.sizeDelta) * new Vector2(3,4) * 300;
         image.rectTransform.sizeDelta = new UnityEngine.Vector2(Mathf.Abs(newSize.x), Mathf.Abs(newSize.y));
-
-        // debugText.SetText(
-        //     "cameraPreviewSize: " + cameraPreviewSize + 
-        //     " | image.rectTransform.localEulerAngles: " + image.rectTransform.localEulerAngles + 
-        //     " | rotationVector: " + rotationVector +
-        //     " | newCameraPreviewSize: " + newCameraPreviewSize);
     }
 
     public void TakePicture() {
@@ -110,6 +98,7 @@ public class CameraController : MonoBehaviour
         FormatCameraTexture(webcam, pictureTakenDisplay, picturePreviewSize);
         pictureTakenDisplay.texture = photo;
 
+            // The following code is only relevant if we later descide to save pictures on users devices
         // if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
         // {
         //     // This should save the picture on the device
