@@ -26,7 +26,9 @@ public class CameraController : MonoBehaviour
     }
     private void PermissionCallbacksPermissionGranted(string permissionName)
     {
-        StartCoroutine(DelayedCameraInitialization());
+        CameraInitialization();
+        
+        Debug.Log($"Permission {permissionName} Granted :)");
     }
 
     private void PermissionCallbacksPermissionDenied(string permissionName)
@@ -34,9 +36,12 @@ public class CameraController : MonoBehaviour
         Debug.LogWarning($"Permission {permissionName} Denied");
     }
 
-    private IEnumerator DelayedCameraInitialization() {
-        yield return null;
+    private void CameraInitialization() {
         
+        Debug.Log("waiting for next frame...");
+        //yield return null;
+
+        Debug.Log("Initializing Camera...");
         webcam = new WebCamTexture();
         image.texture = webcam;
 
@@ -56,11 +61,16 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        //this checks if we have permission for stuff like camera and storage, and asks for them if we don't
+        Debug.Log("script has started...");
+        //checks if we have permission for camera and storage, and asks for them if we don't
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
+            
+            Debug.Log("asking for camera permission...");
             AskCameraPermission();
         }
+        
+        Debug.Log("we have camera permissions...");
             // The following code is only relevant if we  decide to save pictures on users devices
         // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
         // {
@@ -70,9 +80,7 @@ public class CameraController : MonoBehaviour
         // {
         //     AskStorageReadPermission();
         // }
-
-        //InitializeCamera();
-        StartCoroutine(DelayedCameraInitialization());
+        CameraInitialization();
     }
     private void FormatCameraTexture(WebCamTexture webcam, RawImage image, UnityEngine.Vector2 size) {
         // Rotate image to show correct orientation 
