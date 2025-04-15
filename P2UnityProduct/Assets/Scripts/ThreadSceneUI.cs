@@ -12,6 +12,8 @@ public class ThreadSceneUI : MonoBehaviour {
 
     private void Awake(){
         håndsyButton.onClick.AddListener(() => {
+            if (GameManager.Instance.canClickTimer > 0) return;
+            GameManager.Instance.canClickTimer = 1f;
             GameManager.Instance.EnterThread();
         });
         UpdateCompletion();

@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -21,6 +24,10 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField] [Range(0.5f, 1.5f)] private float transmissionTid = 1f;
     [SerializeField] private Animator transmissionAnim;
+
+    [SerializeField] private GameObject trophyPopupPrefab;
+    [SerializeField] private Transform trophyPopTransform;
+    [SerializeField] private TrophySO[] trophyScriptableObjects;
 
     [HideInInspector] public QuizLevelSO currentLevelQuizData;
     [HideInInspector] public MatchLevelSO currentLevelMatchData;
@@ -84,9 +91,9 @@ public class GameManager : MonoBehaviour {
             Debug.LogWarning("Level not found");
         }
 
-        if (PlayerPrefs.GetInt("Trophy1") == 0){
-            CompleteTrophy(1);
-        }
+        // if (PlayerPrefs.GetInt("Trophy1") == 0){
+        //     CompleteTrophy(1);
+        // }
 
         OnEnterLevel?.Invoke(this, EventArgs.Empty);
     }
@@ -94,21 +101,21 @@ public class GameManager : MonoBehaviour {
     public void CompleteLevel(){
         OnExitToGameScene?.Invoke(this, EventArgs.Empty);
 
-        if (PlayerPrefs.GetInt("Trophy2") == 0){
-            CompleteTrophy(2);
-        }
+        // if (PlayerPrefs.GetInt("Trophy2") == 0){
+        //     CompleteTrophy(2);
+        // }
 
-        if (stars == 3 && PlayerPrefs.GetInt("Trophy3") == 0){
-            CompleteTrophy(3);
-        }
+        // if (stars == 3 && PlayerPrefs.GetInt("Trophy3") == 0){
+        //     CompleteTrophy(3);
+        // }
 
         // if (BOSSBANE KLARET NOGET && PlayerPrefs.GetInt("Trophy4") == 0){
         //     CompleteTrophy(4);
         // }
 
-        if (GetTotalStars() == 24 && PlayerPrefs.GetInt("Trophy5") == 0){
-            CompleteTrophy(5);
-        }
+        // if (GetTotalStars() == 24 && PlayerPrefs.GetInt("Trophy5") == 0){
+        //     CompleteTrophy(5);
+        // }
 
         if (currentLevelID - 1 == levelsCompleted){ // Klaret den bane man var kommet
             levelsCompleted++;
@@ -203,6 +210,13 @@ public class GameManager : MonoBehaviour {
 
     private void CompleteTrophy(int trophyID){
         PlayerPrefs.SetInt("Trophy" + trophyID, 1);
-        // TROPHY POP-UP
+        
+        TrophySO currentTrophySO = trophyScriptableObjects[trophyID - 1];
+
+        GameObject trophyPopup = Instantiate(trophyPopupPrefab, trophyPopTransform);
+        trophyPopup.transform.Find("Parent/TrophyIcon").GetComponent<Image>().sprite = currentTrophySO.trophyImage;
+        trophyPopup.transform.Find("Parent/TrophyName").GetComponent<TextMeshProUGUI>().text = currentTrophySO.trophyName;
+
+        Destroy(trophyPopup, 3);
     }
 }
