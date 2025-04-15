@@ -52,4 +52,10 @@ public class GameUI : MonoBehaviour {
     private void Show(){
         gameObject.SetActive(true);
     }
+
+    public void Exit(){
+        GameManager.Instance.CompleteLevel();
+        anim.SetTrigger("End");
+        Invoke("Hide", 0.5f);
+    }
 }
