@@ -6,14 +6,20 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Android;
+using TMPro;
+using System.Numerics;
 
 public class CameraController : MonoBehaviour
 {
     private WebCamTexture webcam = null;
     [SerializeField] private RawImage image;
+    [SerializeField] private RawImage pictureTakenDisplay;    
+    UnityEngine.Vector2 cameraPreviewSize = new UnityEngine.Vector2(3,4) * 300;
+    UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
+
 
     // Image rotation
-    Vector3 rotationVector = new Vector3(0f, 0f, 0f);
+    UnityEngine.Vector3 rotationVector = new UnityEngine.Vector3(0f, 0f, 0f);
 
         private void AskCameraPermission()
     {
@@ -43,11 +49,11 @@ public class CameraController : MonoBehaviour
     }
 
 
-    private void AskStorageWritePermission()
-    {
-        var callbacks = new PermissionCallbacks();
-        Permission.RequestUserPermission(Permission.ExternalStorageWrite, callbacks);
-    }
+    // private void AskStorageWritePermission()
+    // {
+    //     var callbacks = new PermissionCallbacks();
+    //     Permission.RequestUserPermission(Permission.ExternalStorageWrite, callbacks);
+    // }
     // private void AskStorageReadPermission()
     // {
     //     var callbacks = new PermissionCallbacks();
@@ -61,10 +67,10 @@ public class CameraController : MonoBehaviour
         {
             AskCameraPermission();
         }
-        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        {
-            AskStorageWritePermission();
-        }
+        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        // {
+        //     AskStorageWritePermission();
+        // }
         // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
         // {
         //     AskStorageReadPermission();
@@ -73,24 +79,24 @@ public class CameraController : MonoBehaviour
         //InitializeCamera();
         StartCoroutine(DelayedCameraInitialization());
     }
-
-    private void FormatCameraTexture(WebCamTexture webcam) {
-        // Skip making adjustment for incorrect camera data
-        // if (webcam.width < 100)
-        // {
-        //     Debug.Log("Still waiting another frame for correct info...");
-        //     return;
-        // }
+    private void FormatCameraTexture(WebCamTexture webcam, RawImage image, UnityEngine.Vector2 size) {
 
         // Rotate image to show correct orientation 
         rotationVector.z = -webcam.videoRotationAngle;
         image.rectTransform.localEulerAngles = rotationVector;
 
-        // if (webcam.width / webcam.height != 3/4) {
-        //     Debug.Log("Camera ratio " + webcam.width + "/" + webcam.height + "doesn't fit design. Streched to fit.");
-        // }
-        image.rectTransform.sizeDelta = new Vector2(3,4) * 100;
+        UnityEngine.Vector2 newSize = new UnityEngine.Vector2(
+            Mathf.Cos(Mathf.Deg2Rad * rotationVector.z) * size.x - Mathf.Sin(Mathf.Deg2Rad * rotationVector.z) * size.y,
+            Mathf.Sin(Mathf.Deg2Rad * rotationVector.z) * size.x + Mathf.Cos(Mathf.Deg2Rad * rotationVector.z) * size.y); 
         
+        // image.rectTransform.sizeDelta = Quaternion.AngleAxis(rotationVector.z, image.rectTransform.sizeDelta) * new Vector2(3,4) * 300;
+        image.rectTransform.sizeDelta = new UnityEngine.Vector2(Mathf.Abs(newSize.x), Mathf.Abs(newSize.y));
+
+        // debugText.SetText(
+        //     "cameraPreviewSize: " + cameraPreviewSize + 
+        //     " | image.rectTransform.localEulerAngles: " + image.rectTransform.localEulerAngles + 
+        //     " | rotationVector: " + rotationVector +
+        //     " | newCameraPreviewSize: " + newCameraPreviewSize);
     }
 
     public void TakePicture() {
@@ -101,26 +107,24 @@ public class CameraController : MonoBehaviour
         photo.SetPixels(webcam.GetPixels());
         photo.Apply();
 
-        if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        {
-            // This should save the picture on the device 
-            byte[] bytes = photo.EncodeToPNG();
-            string fileName = DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+        FormatCameraTexture(webcam, pictureTakenDisplay, picturePreviewSize);
+        pictureTakenDisplay.texture = photo;
 
-            File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
-            Debug.Log("Saved: " + Application.persistentDataPath + fileName);
-        }
+        // if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        // {
+        //     // This should save the picture on the device
+        //     byte[] bytes = photo.EncodeToPNG();
+        //     string fileName = DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+
+        //     File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
+        //     Debug.Log("Saved: " + Application.persistentDataPath + fileName);
+        // }
     }
 
     void Update()
     {   
         if (webcam != null) {
-            FormatCameraTexture(webcam);
-
-            if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount == 1) {
-                Debug.Log("input rescieved!");
-                TakePicture();
-            }
+            FormatCameraTexture(webcam, image, cameraPreviewSize);
         }
     }
 }
