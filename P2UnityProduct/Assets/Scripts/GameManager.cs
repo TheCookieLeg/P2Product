@@ -55,8 +55,6 @@ public class GameManager : MonoBehaviour {
         Instance = this;
 
         levelsCompleted = PlayerPrefs.GetInt("LevelsCompleted");
-
-        Application.targetFrameRate = 120;
     }
 
     private void Update(){

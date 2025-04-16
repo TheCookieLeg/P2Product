@@ -1,122 +1,104 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEditor;
 using UnityEngine;
 
-public class Dragging : MonoBehaviour {
-
+public class Dragging : MonoBehaviour
+{
     [Header("Dragging variables")]
-    private Vector3 offset; // offset between the touch point and the center of the object
-    public bool isDragging = false;
+    private UnityEngine.Vector3 offset; // offset between the touch point and the center of the object
+    [SerializeField] private bool isDragging = false;
     private float zDepth;
 
     [Header("Rotation Variables")]
-    private Vector2 oldPos;
-    private Vector2 newPos;
+    private UnityEngine.Vector2 oldPos;
+    private UnityEngine.Vector2 newPos;
 
-    [SerializeField] private bool interactable = false;
-    private Vector3 startPosition;
-    private Quaternion startRotation;
-    private Rigidbody2D rb;
-    private Vector2 targetRbPosition;
+    public GameObject spawner;
 
-    private void Awake(){
-        rb = GetComponent<Rigidbody2D>();
-
-        startPosition = transform.localPosition;
-        startRotation = transform.localRotation;
-        interactable = true;
-
-        zDepth = Camera.main.WorldToScreenPoint(transform.position).z;
-    }
-
-    private void Start(){
-        GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
-        GameManager.Instance.OnExitToGameScene += GameManager_OnExitToGameScene;
-    }
-
-    private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        interactable = true;
-
-        transform.localPosition = startPosition;
-        transform.localRotation = startRotation;
-    }
-
-    private void GameManager_OnExitToGameScene(object sender, EventArgs e){
-        interactable = false;
-        isDragging = false;
-    }
-
-    private void OnDestroy(){
-        GameManager.Instance.OnEnterLevel -= GameManager_OnEnterLevel;
-        GameManager.Instance.OnExitToGameScene -= GameManager_OnExitToGameScene;
-    }
-
-    private void Update()
+    // Start is called before the first frame update
+    void Start()
     {
-        if (!interactable) return;
+        zDepth = Camera.main.WorldToScreenPoint(transform.position).z;
+        spawner = GameObject.FindGameObjectWithTag("Spawner");
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
         DragAndDrop();
         RotateObject();
     }
 
-    private void FixedUpdate()
-    {
-        if (isDragging)
-        {
-            rb.MovePosition(targetRbPosition);
-        }
-    }
-
     private void DragAndDrop()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0) // if more than zero fingers is touching the screen
         {
-            Touch touch = Input.GetTouch(0);
-            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, zDepth));
+            Debug.Log("I GOT TOUCHED");
+            if (spawner != null)
+            {
+                spawner.GetComponent<FabricMovement>().enabled = true;
+            }
+            Touch touch = Input.GetTouch(0); // Gets info on the first finger that touches the screen (struct variable)
 
+            UnityEngine.Vector3 touchPosition = Camera.main.ScreenToWorldPoint(new UnityEngine.Vector3(touch.position.x, touch.position.y, zDepth));
+
+            // TouchPhase.Began is the first frame that the finger touches the screen. Here we can calculate some values
             if (touch.phase == TouchPhase.Began)
             {
-                Vector2 worldPos = Camera.main.ScreenToWorldPoint(touch.position);
-                RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+                UnityEngine.Vector2 touchWorldPos2D = Camera.main.ScreenToWorldPoint(touch.position);
+                RaycastHit2D hit = Physics2D.Raycast(touchWorldPos2D, UnityEngine.Vector2.zero);
 
                 if (hit.collider != null && hit.transform == transform)
                 {
                     isDragging = true;
-                    offset = transform.position - (Vector3)worldPos;
+                    offset = transform.position - (UnityEngine.Vector3)touchWorldPos2D;
                 }
             }
             else if (touch.phase == TouchPhase.Moved && isDragging)
             {
-                targetRbPosition = touchPosition + offset;
+                UnityEngine.Vector3 targetPos = new UnityEngine.Vector3(touchPosition.x + offset.x, touchPosition.y + offset.y, touchPosition.z + offset.z);
+                transform.position = UnityEngine.Vector3.Lerp(transform.position, targetPos, 0.4f);
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
+                if (spawner != null)
+                {
+                    spawner.GetComponent<FabricMovement>().enabled = false;
+                }
                 isDragging = false;
             }
-        }
-        else
-        {
+        } else {
             if (Input.GetMouseButtonDown(0))
             {
-                Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+                UnityEngine.Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new UnityEngine.Vector3(Input.mousePosition.x, Input.mousePosition.y, zDepth));
+                UnityEngine.Vector2 mouseWorldPos2D = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos2D, UnityEngine.Vector2.zero);
 
                 if (hit.collider != null && hit.transform == transform)
                 {
                     isDragging = true;
-                    offset = transform.position - (Vector3)worldPos;
+                    offset = transform.position - (UnityEngine.Vector3)mouseWorldPos2D;
+
+                    if (spawner != null)
+                    {
+                        spawner.GetComponent<FabricMovement>().enabled = true;
+                    }
                 }
             }
             else if (Input.GetMouseButton(0) && isDragging)
             {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, zDepth));
-                Vector3 targetPos = mousePos + offset;
-                targetRbPosition = targetPos;
+                UnityEngine.Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new UnityEngine.Vector3(Input.mousePosition.x, Input.mousePosition.y, zDepth));
+                UnityEngine.Vector3 targetPos = new UnityEngine.Vector3(mouseWorldPos.x + offset.x, mouseWorldPos.y + offset.y, mouseWorldPos.z + offset.z);
+                transform.position = UnityEngine.Vector3.Lerp(transform.position, targetPos, 0.4f);
             }
             else if (Input.GetMouseButtonUp(0))
             {
+                if (spawner != null)
+                {
+                    spawner.GetComponent<FabricMovement>().enabled = false;
+                }
                 isDragging = false;
             }
         }
@@ -126,14 +108,19 @@ public class Dragging : MonoBehaviour {
     {
         if (isDragging)
         {
-            Vector2 movement = targetRbPosition - rb.position;
+            newPos = transform.position;
+            UnityEngine.Vector2 movement = newPos - oldPos;
 
-            if (movement.sqrMagnitude > 0.001f)
+            if (movement.magnitude > 0.01f)
             {
-                float angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg;
-                Quaternion targetRotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 0.1f);
+                UnityEngine.Quaternion targetRotation = UnityEngine.Quaternion.LookRotation(UnityEngine.Vector3.forward, movement.normalized);
+
+                transform.rotation = UnityEngine.Quaternion.Lerp(transform.rotation, targetRotation, 0.4f);               
+                
+                oldPos = newPos;
             }
+
+            
         }
     }
 }

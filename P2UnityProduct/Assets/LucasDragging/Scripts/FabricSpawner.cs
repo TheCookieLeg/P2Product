@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class FabricSpawner : MonoBehaviour
@@ -21,7 +22,7 @@ public class FabricSpawner : MonoBehaviour
         // Spawn fabrics and store their positions
         for (int i = 0; i < repetitions; i++)
         {
-            fabricPositions.Add(Instantiate(fabric, fabricSpawnPoint, Quaternion.identity, gameObject.transform));
+            fabricPositions.Add(Instantiate(fabric, fabricSpawnPoint, quaternion.identity, gameObject.transform));
             fabricSpawnPoint += new Vector3(distance, 0, 0);
         }
         SpawnScorerFirstTime();
@@ -32,7 +33,7 @@ public class FabricSpawner : MonoBehaviour
         if (scorerBaseIndex < 0 || scorerBaseIndex + 1 >= fabricPositions.Count)
         {
             Debug.LogWarning("Out of bounds - can't spawn scorer.");
-            //gameUIScript.ExitLevel();
+            gameUIScript.ExitLevel();
             return;
         }
 
@@ -40,25 +41,32 @@ public class FabricSpawner : MonoBehaviour
         Vector3 posB = fabricPositions[scorerBaseIndex + 1].transform.position;
         Vector3 midpoint = (posA + posB) / 2;
 
-        GameObject scorer = Instantiate(Scorer, midpoint, Quaternion.identity, gameObject.transform);
-        scorer.GetComponent<FabricMovement>().moveSpeed = 0.02f;
+        Instantiate(Scorer, midpoint, quaternion.identity, gameObject.transform);
         
-        if (moveForward){
+        if (moveForward)
+        {
             scorerBaseIndex += 2;
-        } else {
+        }
+        else
+        {
             scorerBaseIndex -= 1;
         }
 
         moveForward = !moveForward; // Flip direction every time
     }
 
-    private void SpawnScorerFirstTime(){
+    private void SpawnScorerFirstTime()
+    {
         Vector3 posA = fabricPositions[nextScorerIndex].transform.position;
         Vector3 posB = fabricPositions[nextScorerIndex + 1].transform.position;
         Vector3 midpoint = (posA + posB) / 2;
 
-        GameObject scorer = Instantiate(Scorer, midpoint, Quaternion.identity, gameObject.transform);
-        scorer.GetComponent<FabricMovement>().moveSpeed = 0.02f;
+        Instantiate(Scorer, midpoint, quaternion.identity, gameObject.transform);
         //nextScorerIndex++;
+    }
+
+    private bool isEven(int value)
+    {
+        return value % 2 == 0;
     }
 }
