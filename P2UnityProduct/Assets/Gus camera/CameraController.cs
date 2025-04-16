@@ -26,8 +26,8 @@ public class CameraController : MonoBehaviour
     }
     private void PermissionCallbacksPermissionGranted(string permissionName)
     {
-        CameraInitialization();
-        
+        StartCamera();
+
         Debug.Log($"Permission {permissionName} Granted :)");
     }
 
@@ -58,30 +58,30 @@ public class CameraController : MonoBehaviour
     //     var callbacks = new PermissionCallbacks();
     //     Permission.RequestUserPermission(Permission.ExternalStorageRead, callbacks);
     // }
+    
+    void OnEnable() {
+        StartCamera();
+    }
 
-    void Start()
-    {
-        Debug.Log("script has started...");
-        //checks if we have permission for camera and storage, and asks for them if we don't
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
-        {
-            
-            Debug.Log("asking for camera permission...");
-            AskCameraPermission();
-        }
-        
-        Debug.Log("we have camera permissions...");
-            // The following code is only relevant if we  decide to save pictures on users devices
-        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        // {
-        //     AskStorageWritePermission();
-        // }
-        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
-        // {
-        //     AskStorageReadPermission();
-        // }
+    void OnDisable() {
+        StopCamera();
+    }
+    
+    public void StartCamera() {
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera)) {
+                AskCameraPermission();
+            }
         CameraInitialization();
     }
+
+    public void StopCamera() {
+        if (webcam != null || webcam.isPlaying) {
+            webcam.Stop();
+            image.texture = null;
+            webcam = null;
+        }
+    }
+
     private void FormatCameraTexture(WebCamTexture webcam, RawImage image, UnityEngine.Vector2 size) {
         // Rotate image to show correct orientation 
         UnityEngine.Vector3 rotationVector = new UnityEngine.Vector3(0f, 0f, 0f);
