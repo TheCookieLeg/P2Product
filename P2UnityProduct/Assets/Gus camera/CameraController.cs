@@ -19,7 +19,6 @@ public class CameraController : MonoBehaviour
     
     private void AskCameraPermission()
     {
-        //cool way of calling a method when permission granted or denied
         PermissionCallbacks callbacks = new PermissionCallbacks();
         callbacks.PermissionDenied += PermissionCallbacksPermissionDenied;
         callbacks.PermissionGranted += PermissionCallbacksPermissionGranted;
@@ -27,8 +26,8 @@ public class CameraController : MonoBehaviour
     }
     private void PermissionCallbacksPermissionGranted(string permissionName)
     {
-        StartCamera();
-
+        CameraInitialization();
+        
         Debug.Log($"Permission {permissionName} Granted :)");
     }
 
@@ -38,34 +37,51 @@ public class CameraController : MonoBehaviour
     }
 
     private void CameraInitialization() {
+        
+        Debug.Log("waiting for next frame...");
+        //yield return null;
+
+        Debug.Log("Initializing Camera...");
         webcam = new WebCamTexture();
         image.texture = webcam;
 
         webcam.Play();
     }
-    void OnEnable() {
-        StartCamera();
-    }
+        // The following code is only relevant if we  decide to save pictures on users devices
+    // private void AskStorageWritePermission()
+    // {
+    //     var callbacks = new PermissionCallbacks();
+    //     Permission.RequestUserPermission(Permission.ExternalStorageWrite, callbacks);
+    // }
+    // private void AskStorageReadPermission()
+    // {
+    //     var callbacks = new PermissionCallbacks();
+    //     Permission.RequestUserPermission(Permission.ExternalStorageRead, callbacks);
+    // }
 
-    void OnDisable() {
-        StopCamera();
-    }
-    
-    public void StartCamera() {
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera)) {
-                AskCameraPermission();
-            }
+    void Start()
+    {
+        Debug.Log("script has started...");
+        //checks if we have permission for camera and storage, and asks for them if we don't
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
+        {
+            
+            Debug.Log("asking for camera permission...");
+            AskCameraPermission();
+        }
+        
+        Debug.Log("we have camera permissions...");
+            // The following code is only relevant if we  decide to save pictures on users devices
+        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        // {
+        //     AskStorageWritePermission();
+        // }
+        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
+        // {
+        //     AskStorageReadPermission();
+        // }
         CameraInitialization();
     }
-
-    public void StopCamera() {
-        if (webcam != null || webcam.isPlaying) {
-            webcam.Stop();
-            image.texture = null;
-            webcam = null;
-        }
-    }
-
     private void FormatCameraTexture(WebCamTexture webcam, RawImage image, UnityEngine.Vector2 size) {
         // Rotate image to show correct orientation 
         UnityEngine.Vector3 rotationVector = new UnityEngine.Vector3(0f, 0f, 0f);
@@ -83,13 +99,23 @@ public class CameraController : MonoBehaviour
         if (webcam == null) {
             return;
         }
-        // take a "screenshot" by storing the cameras pixels as a texture
         Texture2D photo = new Texture2D(webcam.width, webcam.height);
         photo.SetPixels(webcam.GetPixels());
         photo.Apply();
 
         FormatCameraTexture(webcam, pictureTakenDisplay, picturePreviewSize);
         pictureTakenDisplay.texture = photo;
+
+            // The following code is only relevant if we later descide to save pictures on users devices
+        // if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+        // {
+        //     // This should save the picture on the device
+        //     byte[] bytes = photo.EncodeToPNG();
+        //     string fileName = DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+
+        //     File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
+        //     Debug.Log("Saved: " + Application.persistentDataPath + fileName);
+        // }
     }
 
     void Update()
