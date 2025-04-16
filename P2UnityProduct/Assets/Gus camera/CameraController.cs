@@ -37,11 +37,6 @@ public class CameraController : MonoBehaviour
     }
 
     private void CameraInitialization() {
-        
-        Debug.Log("waiting for next frame...");
-        //yield return null;
-
-        Debug.Log("Initializing Camera...");
         webcam = new WebCamTexture();
         image.texture = webcam;
 
