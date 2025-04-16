@@ -15,7 +15,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private RawImage image; // display area for camera output
     [SerializeField] private RawImage pictureTakenDisplay; // display area for picture taken
     [SerializeField] private UnityEngine.Vector2 cameraPreviewSize = new UnityEngine.Vector2(3,4) * 300;
-    [SerializeField] private UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
+    // [SerializeField] private UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
+    [SerializeField] private GameObject takePictureButton;
+    [SerializeField] private GameObject confirmOrRetakeButtons;
     
     private void AskCameraPermission()
     {
@@ -52,6 +54,7 @@ public class CameraController : MonoBehaviour
     }
     
     public void StartCamera() {
+        if (showingPicture) return;
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera)) {
                 AskCameraPermission();
             }
@@ -79,17 +82,38 @@ public class CameraController : MonoBehaviour
         image.rectTransform.sizeDelta = new UnityEngine.Vector2(Mathf.Abs(newSize.x), Mathf.Abs(newSize.y));
     }
 
+    private Texture2D photo = null;
     public void TakePicture() {
         if (webcam == null) {
             return;
         }
         // take a "screenshot" by storing the cameras pixels as a texture
-        Texture2D photo = new Texture2D(webcam.width, webcam.height);
+        photo = new Texture2D(webcam.width, webcam.height);
         photo.SetPixels(webcam.GetPixels());
         photo.Apply();
 
-        FormatCameraTexture(webcam, pictureTakenDisplay, picturePreviewSize);
+        OpenPictureOverlay();
+    }
+    private bool showingPicture = false;
+    private void OpenPictureOverlay() {
+        showingPicture = true;
+        
+        takePictureButton.SetActive(false);
+        confirmOrRetakeButtons.SetActive(true);
+
+        FormatCameraTexture(webcam, pictureTakenDisplay, cameraPreviewSize);
         pictureTakenDisplay.texture = photo;
+        pictureTakenDisplay.gameObject.SetActive(true);
+        StopCamera();
+    }
+
+    public void RetakePicture() {
+        showingPicture = false;
+        takePictureButton.SetActive(true);
+        confirmOrRetakeButtons.SetActive(false);
+
+        pictureTakenDisplay.gameObject.SetActive(false);
+        StartCamera();
     }
 
     void Update()
