@@ -53,6 +53,7 @@ public class MatchUI : MonoBehaviour {
         matchData = GameManager.Instance.currentLevelMatchData;
         currentQuestionIndex = 0;
 
+        GameManager.Instance.stars = 3;
         starsText.text = GameManager.Instance.stars.ToString();
 
         Show();
@@ -89,6 +90,7 @@ public class MatchUI : MonoBehaviour {
             buttons[index].GetComponent<Animator>().SetBool("Active", false);
             buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
         } else {
+            GameManager.Instance.canClickTimer = 0.5f;
             buttons[index].GetComponent<Animator>().SetBool("Active", true);
 
             int matchA = firstSelectedButtonIndex;
