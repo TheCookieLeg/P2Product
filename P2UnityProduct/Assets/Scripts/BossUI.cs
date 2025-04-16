@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class BossUI : MonoBehaviour {
 
     [SerializeField] private Button backButton;
-    [SerializeField] private Button confirmButton;
 
     private Animator anim;
 
@@ -16,11 +15,6 @@ public class BossUI : MonoBehaviour {
         anim = GetComponent<Animator>();
 
         backButton.onClick.AddListener(() => {
-            GameManager.Instance.BackToGameScene();
-            anim.SetTrigger("End");
-            Invoke("Hide", 0.5f);
-        });
-            confirmButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
             anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
