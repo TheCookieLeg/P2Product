@@ -10,10 +10,9 @@ public class StoryUI : MonoBehaviour {
 
     [SerializeField] private TextMeshProUGUI starsText;
     [SerializeField] private Animator starAnim;
+    [SerializeField] private TextMeshProUGUI vælgBilledText;
     [SerializeField] private Button backButton;
-    [SerializeField] private Button confirmButton;
     [SerializeField] private Transform answersParent;
-    [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
     [SerializeField] private Button[] buttons;
     [SerializeField] private Image[] answerImages;
 
@@ -22,7 +21,7 @@ public class StoryUI : MonoBehaviour {
     private StoryLevelSO storyData;
     private Animator anim;
 
-    private int firstSelectedIndex = -1;
+    private int currentImageIndex = 0;
 
     private void Awake(){
         anim = GetComponent<Animator>();
@@ -32,8 +31,6 @@ public class StoryUI : MonoBehaviour {
             anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
         });
-
-        confirmButton.onClick.AddListener(() => OnConfirmClicked());
 
         for (int i = 0; i < buttons.Length; i++){
             int index = i;
@@ -53,6 +50,9 @@ public class StoryUI : MonoBehaviour {
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
         if (GameManager.Instance.currentLevelStoryData == null) return;
 
+        currentImageIndex = 0;
+        vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
+
         storyData = GameManager.Instance.currentLevelStoryData;
         currentQuestionIndex = 0;
 
@@ -66,142 +66,100 @@ public class StoryUI : MonoBehaviour {
     private void LoadQuestion(int index){
         currentQuestion = storyData.questions[index];
 
+        for (int i = 0; i < answerImages.Length; i++){
+            answerImages[i].sprite = currentQuestion.answers[i];
+            buttons[i].interactable = true;
+            buttons[i].GetComponentInChildren<Image>().color = Color.white;
+        }
+
         List<int> randomIndices = Enumerable.Range(0, buttons.Length).OrderBy(x => UnityEngine.Random.value).ToList();
 
         for (int i = 0; i < buttons.Length; i++){
             buttons[randomIndices[i]].transform.SetSiblingIndex(i);
         }
-
-        for (int i = 0; i < answerImages.Length; i++){
-            answerImages[i].sprite = currentQuestion.answers[i]; // Keep correct order here
-            answerImages[i].gameObject.name = i.ToString(); // Restore original index name if needed
-            buttons[i].interactable = true;
-            buttons[i].GetComponentInChildren<Image>().color = Color.white;
-        }
-
-        firstSelectedIndex = -1;
     }
 
-    private void OnButtonClicked(int index){
-        if (GameManager.Instance.canClickTimer > 0) return;
-
-        if (firstSelectedIndex == -1){
-            firstSelectedIndex = index;
-            buttons[index].GetComponent<Animator>().SetBool("Active", true);
-        } else if (firstSelectedIndex == index){
-            firstSelectedIndex = -1;
-            buttons[index].GetComponent<Animator>().SetBool("Active", false);
-            buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
-        } else {
-            Transform first = buttons[firstSelectedIndex].transform;
-            Transform second = buttons[index].transform;
-
-            int firstSibling = first.GetSiblingIndex();
-            int secondSibling = second.GetSiblingIndex();
-
-            buttons[firstSelectedIndex].GetComponent<Animator>().SetBool("Active", false);
-            buttons[firstSelectedIndex].GetComponent<Animator>().ResetTrigger("ButtonDown");
-            buttons[index].GetComponent<Animator>().SetBool("Active", false);
-            buttons[index].GetComponent<Animator>().ResetTrigger("ButtonDown");
-
-            first.SetSiblingIndex(secondSibling);
-            second.SetSiblingIndex(firstSibling);
-
-            buttons[firstSelectedIndex].GetComponentInChildren<Image>().color = Color.white;
-            firstSelectedIndex = -1;
-
-            Invoke("FixBug", 0.08f);
-        }
-    }
-
-    private void FixBug(){
-        verticalLayoutGroup.spacing = 20.1f;
-        verticalLayoutGroup.spacing = 20f;
-    }
-
-    private void OnConfirmClicked(){
+    private void OnButtonClicked(int selectedIndex){
         if (GameManager.Instance.canClickTimer > 0) return;
         GameManager.Instance.canClickTimer = 0.5f;
 
-        bool isCorrect = true;
-
-        List<int> rightAnswers = new List<int>(6);
-        for (int i = 0; i < buttons.Length; i++){
-            int buttonIndex = buttons[i].transform.GetSiblingIndex();
-
-            if (answerImages[buttonIndex].sprite != currentQuestion.answers[i]){
-                isCorrect = false;
-            } else {
-                rightAnswers.Add(i);
-            }
+        if (!IsAnswerCorrect(selectedIndex)){
+            StartCoroutine(WrongAnswer(selectedIndex));
+            return;
+        } else {
+            StartCoroutine(RightAnswer(selectedIndex));
         }
-
-        StartCoroutine(Answer(rightAnswers, isCorrect));
     }
 
-    private IEnumerator Answer(List<int> rightAnswers, bool isCorrect){
-        if (!isCorrect){
-            GameManager.Instance.stars--;
-            starsText.text = GameManager.Instance.stars.ToString();
-            starAnim.SetTrigger("Pulse");
-        }
+    private IEnumerator WrongAnswer(int selectedIndex){
+        GameManager.Instance.stars--;
+        starsText.text = GameManager.Instance.stars.ToString();
+        starAnim.SetTrigger("Pulse");
+
+        Image imageComponent = buttons[selectedIndex].GetComponentInChildren<Image>();
 
         float elapsedTime = 0f;
         float duration = 0.5f;
 
-        Color correctStartColor = Color.green;
-        Color wrongStartColor = Color.red;
-        Color correctEndColor = Color.gray;
-        Color wrongEndColor = Color.white;
-
-        for (int i = 0; i < buttons.Length; i++){
-            if (rightAnswers.Contains(i)){
-                buttons[i].GetComponentInChildren<Image>().color = correctEndColor;
-            } else {
-                buttons[i].GetComponentInChildren<Image>().color = wrongStartColor;
-            }
-        }
+        Color startColor = Color.red;
+        Color endColor = Color.white;
 
         while (elapsedTime < duration){
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
 
-            for (int i = 0; i < buttons.Length; i++){
-                if (rightAnswers.Contains(i)){
-                    buttons[i].GetComponentInChildren<Image>().color = Color.Lerp(correctStartColor, correctEndColor, t);
-                } else {
-                    buttons[i].GetComponentInChildren<Image>().color = Color.Lerp(wrongStartColor, wrongEndColor, t);
-                }
-            }
-
+            imageComponent.color = Color.Lerp(startColor, endColor, t);
             yield return null;
         }
 
-        for (int i = 0; i < buttons.Length; i++){
-            if (rightAnswers.Contains(i)){
-                buttons[i].GetComponentInChildren<Image>().color = correctEndColor;
-                buttons[i].interactable = false;
-            } else {
-                buttons[i].GetComponentInChildren<Image>().color = wrongEndColor;
-            }
+        imageComponent.color = endColor;
+
+        if (GameManager.Instance.stars <= 0){
+            GameManager.Instance.BackToGameScene();
+            anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
+        }
+    }
+
+    private IEnumerator RightAnswer(int selectedIndex){
+        Image imageComponent = buttons[selectedIndex].GetComponentInChildren<Image>();
+        buttons[selectedIndex].interactable = false;
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        Color startColor = Color.green;
+        Color endColor = Color.gray;
+
+        while (elapsedTime < duration){
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            imageComponent.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
         }
 
-        if (isCorrect){
-            currentQuestionIndex++;
-            if (currentQuestionIndex < storyData.questions.Count){
+        imageComponent.color = endColor;
+
+        currentImageIndex++;
+        vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
+
+        if (currentImageIndex >= currentQuestion.answers.Length){
+            if (currentQuestionIndex < storyData.questions.Count - 1){
+                currentQuestionIndex++;
+                currentImageIndex = 0;
+                vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
                 LoadQuestion(currentQuestionIndex);
             } else {
                 GameManager.Instance.CompleteLevel();
                 anim.SetTrigger("End");
                 Invoke("Hide", 0.5f);
             }
-        } else {
-            if (GameManager.Instance.stars <= 0){
-                GameManager.Instance.BackToGameScene();
-                anim.SetTrigger("End");
-                Invoke("Hide", 0.5f);
-            }
         }
+    }
+
+    private bool IsAnswerCorrect(int selectedIndex){
+        return selectedIndex == currentImageIndex;
     }
 
     private void Hide(){

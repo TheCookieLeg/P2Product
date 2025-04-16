@@ -31,7 +31,7 @@ public class Dragging : MonoBehaviour {
         zDepth = Camera.main.WorldToScreenPoint(transform.position).z;
     }
 
-  private void Start(){
+    private void Start(){
         GameManager.Instance.OnEnterLevel += GameManager_OnEnterLevel;
         GameManager.Instance.OnExitToGameScene += GameManager_OnExitToGameScene;
     }
