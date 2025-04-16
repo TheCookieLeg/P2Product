@@ -3,22 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Needle : MonoBehaviour
-{
-    public FabricSpawner spawner;
+public class Needle : MonoBehaviour {
 
-    private void Start()
-    {
-        spawner = GameObject.FindWithTag("Spawner").GetComponent<FabricSpawner>();
+    private GameUI gameUIScript;
+
+    private void Awake(){
+        gameUIScript = GetComponentInParent<GameUI>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Score"))
-        {
-            //Add some score
-            Destroy(other.gameObject);
-            spawner.SpawnScorer();
+    private void OnTriggerEnter2D(Collider2D other){
+        if (other.CompareTag("Score")){
+            gameUIScript.HitScorer();
         }
     }
 }
