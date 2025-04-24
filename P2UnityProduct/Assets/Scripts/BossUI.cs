@@ -9,7 +9,9 @@ public class BossUI : MonoBehaviour {
 
     [SerializeField] private Button backButton;
     [SerializeField] private Button confirmButton;
-
+    [SerializeField] private Button openCameraScreenButton;
+    [SerializeField] private GameObject cameraScreen;
+    
     private Animator anim;
 
     private void Awake(){
@@ -24,6 +26,10 @@ public class BossUI : MonoBehaviour {
             GameManager.Instance.BackToGameScene();
             anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
+        });
+        // enables camera page/screen
+        openCameraScreenButton.onClick.AddListener(() => {
+            cameraScreen.SetActive(true);    
         });
     }
 
@@ -40,6 +46,7 @@ public class BossUI : MonoBehaviour {
         if (GameManager.Instance.currentLevelBossData == null) return;
 
         Show();
+        cameraScreen.SetActive(false);
     }
 
     private void Hide(){
