@@ -69,7 +69,9 @@ public class StoryUI : MonoBehaviour {
         for (int i = 0; i < answerImages.Length; i++){
             answerImages[i].sprite = currentQuestion.answers[i];
             buttons[i].interactable = true;
-            buttons[i].GetComponentInChildren<Image>().color = Color.white;
+            Image[] imageComponents = buttons[i].GetComponentsInChildren<Image>();
+            imageComponents[0].color = Color.white;
+            imageComponents[1].color = Color.white;
         }
 
         List<int> randomIndices = Enumerable.Range(0, buttons.Length).OrderBy(x => UnityEngine.Random.value).ToList();
@@ -96,7 +98,7 @@ public class StoryUI : MonoBehaviour {
         starsText.text = GameManager.Instance.stars.ToString();
         starAnim.SetTrigger("Pulse");
 
-        Image imageComponent = buttons[selectedIndex].GetComponentInChildren<Image>();
+        Image[] imageComponents = buttons[selectedIndex].GetComponentsInChildren<Image>();
 
         float elapsedTime = 0f;
         float duration = 0.5f;
@@ -108,11 +110,13 @@ public class StoryUI : MonoBehaviour {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
 
-            imageComponent.color = Color.Lerp(startColor, endColor, t);
+            imageComponents[0].color = Color.Lerp(startColor, endColor, t);
+            imageComponents[1].color = Color.Lerp(startColor, endColor, t);
             yield return null;
         }
 
-        imageComponent.color = endColor;
+        imageComponents[0].color = endColor;
+        imageComponents[1].color = endColor;
 
         if (GameManager.Instance.stars <= 0){
             GameManager.Instance.BackToGameScene();
@@ -122,7 +126,7 @@ public class StoryUI : MonoBehaviour {
     }
 
     private IEnumerator RightAnswer(int selectedIndex){
-        Image imageComponent = buttons[selectedIndex].GetComponentInChildren<Image>();
+        Image[] imageComponents = buttons[selectedIndex].GetComponentsInChildren<Image>();
         buttons[selectedIndex].interactable = false;
 
         float elapsedTime = 0f;
@@ -135,11 +139,13 @@ public class StoryUI : MonoBehaviour {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
 
-            imageComponent.color = Color.Lerp(startColor, endColor, t);
+            imageComponents[0].color = Color.Lerp(startColor, endColor, t);
+            imageComponents[1].color = Color.Lerp(startColor, endColor, t);
             yield return null;
         }
 
-        imageComponent.color = endColor;
+        imageComponents[0].color = endColor;
+        imageComponents[1].color = endColor;
 
         currentImageIndex++;
         vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
