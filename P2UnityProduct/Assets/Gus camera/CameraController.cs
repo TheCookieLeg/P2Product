@@ -15,10 +15,13 @@ public class CameraController : MonoBehaviour
     [SerializeField] private RawImage image; // display area for camera output
     [SerializeField] private RawImage pictureTakenDisplay; // display area for picture taken
     [SerializeField] private UnityEngine.Vector2 cameraPreviewSize = new UnityEngine.Vector2(3,4) * 300;
-    [SerializeField] private UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
+    // [SerializeField] private UnityEngine.Vector2 picturePreviewSize = new UnityEngine.Vector2(3,4) * 50;
+    [SerializeField] private GameObject takePictureButton;
+    [SerializeField] private GameObject confirmOrRetakeButtons;
     
     private void AskCameraPermission()
     {
+        //cool way of calling a method when permission granted or denied
         PermissionCallbacks callbacks = new PermissionCallbacks();
         callbacks.PermissionDenied += PermissionCallbacksPermissionDenied;
         callbacks.PermissionGranted += PermissionCallbacksPermissionGranted;
@@ -26,8 +29,8 @@ public class CameraController : MonoBehaviour
     }
     private void PermissionCallbacksPermissionGranted(string permissionName)
     {
-        CameraInitialization();
-        
+        StartCamera();
+
         Debug.Log($"Permission {permissionName} Granted :)");
     }
 
@@ -37,51 +40,35 @@ public class CameraController : MonoBehaviour
     }
 
     private void CameraInitialization() {
-        
-        Debug.Log("waiting for next frame...");
-        //yield return null;
-
-        Debug.Log("Initializing Camera...");
         webcam = new WebCamTexture();
         image.texture = webcam;
 
         webcam.Play();
     }
-        // The following code is only relevant if we  decide to save pictures on users devices
-    // private void AskStorageWritePermission()
-    // {
-    //     var callbacks = new PermissionCallbacks();
-    //     Permission.RequestUserPermission(Permission.ExternalStorageWrite, callbacks);
-    // }
-    // private void AskStorageReadPermission()
-    // {
-    //     var callbacks = new PermissionCallbacks();
-    //     Permission.RequestUserPermission(Permission.ExternalStorageRead, callbacks);
-    // }
+    void OnEnable() {
+        StartCamera();
+    }
 
-    void Start()
-    {
-        Debug.Log("script has started...");
-        //checks if we have permission for camera and storage, and asks for them if we don't
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
-        {
-            
-            Debug.Log("asking for camera permission...");
-            AskCameraPermission();
-        }
-        
-        Debug.Log("we have camera permissions...");
-            // The following code is only relevant if we  decide to save pictures on users devices
-        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        // {
-        //     AskStorageWritePermission();
-        // }
-        // if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
-        // {
-        //     AskStorageReadPermission();
-        // }
+    void OnDisable() {
+        StopCamera();
+    }
+    
+    public void StartCamera() {
+        if (showingPicture) return;
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera)) {
+                AskCameraPermission();
+            }
         CameraInitialization();
     }
+
+    public void StopCamera() {
+        if (webcam != null || webcam.isPlaying) {
+            webcam.Stop();
+            image.texture = null;
+            webcam = null;
+        }
+    }
+
     private void FormatCameraTexture(WebCamTexture webcam, RawImage image, UnityEngine.Vector2 size) {
         // Rotate image to show correct orientation 
         UnityEngine.Vector3 rotationVector = new UnityEngine.Vector3(0f, 0f, 0f);
@@ -95,27 +82,38 @@ public class CameraController : MonoBehaviour
         image.rectTransform.sizeDelta = new UnityEngine.Vector2(Mathf.Abs(newSize.x), Mathf.Abs(newSize.y));
     }
 
+    private Texture2D photo = null;
     public void TakePicture() {
         if (webcam == null) {
             return;
         }
-        Texture2D photo = new Texture2D(webcam.width, webcam.height);
+        // take a "screenshot" by storing the cameras pixels as a texture
+        photo = new Texture2D(webcam.width, webcam.height);
         photo.SetPixels(webcam.GetPixels());
         photo.Apply();
 
-        FormatCameraTexture(webcam, pictureTakenDisplay, picturePreviewSize);
+        OpenPictureOverlay();
+    }
+    private bool showingPicture = false;
+    private void OpenPictureOverlay() {
+        showingPicture = true;
+        
+        takePictureButton.SetActive(false);
+        confirmOrRetakeButtons.SetActive(true);
+
+        FormatCameraTexture(webcam, pictureTakenDisplay, cameraPreviewSize);
         pictureTakenDisplay.texture = photo;
+        pictureTakenDisplay.gameObject.SetActive(true);
+        StopCamera();
+    }
 
-            // The following code is only relevant if we later descide to save pictures on users devices
-        // if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-        // {
-        //     // This should save the picture on the device
-        //     byte[] bytes = photo.EncodeToPNG();
-        //     string fileName = DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+    public void RetakePicture() {
+        showingPicture = false;
+        takePictureButton.SetActive(true);
+        confirmOrRetakeButtons.SetActive(false);
 
-        //     File.WriteAllBytes(Application.persistentDataPath + fileName, bytes);
-        //     Debug.Log("Saved: " + Application.persistentDataPath + fileName);
-        // }
+        pictureTakenDisplay.gameObject.SetActive(false);
+        StartCamera();
     }
 
     void Update()
