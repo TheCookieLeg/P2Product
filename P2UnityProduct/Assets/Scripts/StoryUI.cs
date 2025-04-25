@@ -48,12 +48,12 @@ public class StoryUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        if (GameManager.Instance.currentLevelStoryData == null) return;
+        if (GameManager.Instance.currentLevelData is not StoryLevelSO) return;
 
         currentImageIndex = 0;
         vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
 
-        storyData = GameManager.Instance.currentLevelStoryData;
+        storyData = GameManager.Instance.currentLevelData as StoryLevelSO;
         currentQuestionIndex = 0;
 
         GameManager.Instance.stars = 3;
