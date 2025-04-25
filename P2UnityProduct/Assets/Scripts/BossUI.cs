@@ -10,15 +10,19 @@ public class BossUI : MonoBehaviour {
 
     [SerializeField] private Button backButton;
     [SerializeField] private Button confirmButton;
+
     [SerializeField] private Button takePictureButton;
     [SerializeField] private GameObject pictureButtonsParent;
     [SerializeField] private Button retakePictureButton;
     [SerializeField] private RawImage image; // display area for camera output
     [SerializeField] private RawImage pictureTakenDisplay; // display area for picture taken
     [SerializeField] private Vector2 cameraPreviewSize = new Vector2(3,4) * 300;
+    [SerializeField] private Button openCameraScreenButton;
+    [SerializeField] private GameObject cameraScreen;
 
     private WebCamTexture webcam = null;
     private bool showingPicture = false;
+    
     private Animator anim;
     private Texture2D photo = null;
 
@@ -42,6 +46,10 @@ public class BossUI : MonoBehaviour {
         });
         retakePictureButton.onClick.AddListener(() => {
             RetakePicture();
+        // enables camera page/screen
+        });
+        openCameraScreenButton.onClick.AddListener(() => {
+            cameraScreen.SetActive(true);    
         });
     }
 
@@ -155,6 +163,7 @@ public class BossUI : MonoBehaviour {
 
     private void PermissionCallbacksPermissionDenied(string permissionName){
         Debug.LogWarning($"Permission {permissionName} Denied");
+        cameraScreen.SetActive(false);
     }
 
     private void Hide(){
