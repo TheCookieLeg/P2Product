@@ -13,30 +13,58 @@ MonoBehaviour:
   m_Name: Quiz.final
   m_EditorClassIdentifier: 
   questions:
-  - questionText: Hvad ser du i videoen?
+  - questionText: "Hvad kan du bruge til nemt at m\xE5le, hvor lang en tr\xE5d du
+      skal bruge?"
     image: {fileID: 0}
     videoClip: {fileID: 32900000, guid: 2f0261d8001b1e6418d0785d751342f9, type: 3}
     answers:
-    - Korssting
-    - Fladsting
-    - Bagsting
-    - Tungesting
-    correctAnswerIndex: 3
-  - questionText: "Hvilken type n\xE5l er bedst at bruge til tyndt stof?"
+    - Din arm
+    - En lineal
+    - "Et m\xE5leb\xE5nd"
+    - En blyant
+    correctAnswerIndex: 1
+  - questionText: "Hvordan kan en tandstikker hj\xE6lpe, n\xE5r du syr en knap p\xE5?"
     image: {fileID: 21300000, guid: 4c9beb75e061b6542af27b9e0cf672ca, type: 3}
     videoClip: {fileID: 0}
     answers:
-    - "En tyk n\xE5l"
-    - "En tynd n\xE5l"
-    - "En lang n\xE5l"
-    - "En kort n\xE5l"
+    - "Den holder tr\xE5den p\xE5 plads"
+    - Den giver plads mellem knap og stof
+    - "Den bruges som n\xE5l"
+    - "Den g\xF8r tr\xE5den st\xE6rkere"
     correctAnswerIndex: 2
+  - questionText: "Hvor mange gange skal du stikke tr\xE5den igennem knappehullerne"
+    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
+    videoClip: {fileID: 0}
+    answers:
+    - 32 gange
+    - 12 gange
+    - 24 gange
+    - 16 gange
+    correctAnswerIndex: 4
+  - questionText: "Hvilken n\xE5l er bedst til tyndt stof?"
+    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
+    videoClip: {fileID: 0}
+    answers:
+    - "En stump n\xE5l"
+    - "En syn\xE5l med et stort \xF8je"
+    - "En fin, tynd n\xE5l"
+    - "En sikkerhedsn\xE5l"
+    correctAnswerIndex: 3
   - questionText: Hvad er et bagsting?
     image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
     videoClip: {fileID: 0}
     answers:
-    - "Et st\xE6rkt sting der minder om de sting en maskine kan lave"
-    - "Et sting man syr bag p\xE5 stoffet"
-    - Et sting man kun kan sy baglens
-    - Det er ikke et sting
-    correctAnswerIndex: 1
+    - Et dekorativt sting
+    - "Et st\xE6rkt sting"
+    - "Et sting, hvor du binder tr\xE5den bagp\xE5"
+    - Et sting, du bruger til at sy knapper
+    correctAnswerIndex: 2
+  - questionText: "Hvad er vigtigt at huske, n\xE5r du afslutter syningen?"
+    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
+    videoClip: {fileID: 0}
+    answers:
+    - Klip stoffet
+    - "Sl\xE5 en knude"
+    - "Klip n\xE5len"
+    - Brug lim
+    correctAnswerIndex: 2
