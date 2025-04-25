@@ -49,7 +49,8 @@ public class BossUI : MonoBehaviour {
         // enables camera page/screen
         });
         openCameraScreenButton.onClick.AddListener(() => {
-            cameraScreen.SetActive(true);    
+            cameraScreen.SetActive(true); 
+            StartCamera();   
         });
     }
 
@@ -73,7 +74,7 @@ public class BossUI : MonoBehaviour {
 
         Show();
 
-        StartCamera();
+        cameraScreen.SetActive(false);
     }
 
     private void StartCamera() {
