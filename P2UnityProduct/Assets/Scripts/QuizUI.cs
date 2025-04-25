@@ -51,9 +51,9 @@ public class QuizUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        if (GameManager.Instance.currentLevelQuizData == null) return;
+        if (GameManager.Instance.currentLevelData is not QuizLevelSO) return;
 
-        quizData = GameManager.Instance.currentLevelQuizData;
+        quizData = GameManager.Instance.currentLevelData as QuizLevelSO;
         currentQuestionIndex = 0;
 
         GameManager.Instance.stars = 3;

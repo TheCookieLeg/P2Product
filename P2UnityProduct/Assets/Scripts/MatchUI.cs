@@ -48,9 +48,9 @@ public class MatchUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        if (GameManager.Instance.currentLevelMatchData == null) return;
+        if (GameManager.Instance.currentLevelData is not MatchLevelSO) return;
 
-        matchData = GameManager.Instance.currentLevelMatchData;
+        matchData = GameManager.Instance.currentLevelData as MatchLevelSO;
         currentQuestionIndex = 0;
 
         starsText.text = GameManager.Instance.stars.ToString();
