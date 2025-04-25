@@ -13,31 +13,24 @@ MonoBehaviour:
   m_Name: Match.2
   m_EditorClassIdentifier: 
   questions:
-  - answers:
-    - 1
-    - 2
-    - 3
-    - One
-    - Two
-    - Three
+  - answerTexts:
+    - Lav stilken
+    - "Tr\xE5d i n\xE5len"
+    - Sy knappen fast
+    - 
+    - 
+    - 
+    answerImages:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 21300000, guid: 33d6689efbf794875a4f71b1e886fd54, type: 3}
+    - {fileID: 21300000, guid: 9b793600000994d39bb85885bcd59d31, type: 3}
+    - {fileID: 21300000, guid: a2993ce6ce5a541a5b8a6e29c3543a47, type: 3}
     matchPairs:
     - leftIndex: 0
-      rightIndex: 3
-    - leftIndex: 1
-      rightIndex: 4
-    - leftIndex: 2
       rightIndex: 5
-  - answers:
-    - En
-    - To
-    - Tre
-    - 1
-    - 2
-    - 3
-    matchPairs:
-    - leftIndex: 0
-      rightIndex: 3
     - leftIndex: 1
-      rightIndex: 4
+      rightIndex: 3
     - leftIndex: 2
-      rightIndex: 5
+      rightIndex: 4

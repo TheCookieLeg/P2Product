@@ -13,31 +13,24 @@ MonoBehaviour:
   m_Name: MatchTest
   m_EditorClassIdentifier: 
   questions:
-  - answers:
-    - 1
-    - 2
-    - 3
-    - One
-    - Two
-    - Three
+  - answerTexts:
+    - Korssting
+    - bagsting
+    - "K\xE6desting"
+    - 
+    - 
+    - 
+    answerImages:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 21300000, guid: 75b20c13c103d4f5b878780051d10537, type: 3}
+    - {fileID: 21300000, guid: 6574d8a31bff64ab09cceb5a62766b62, type: 3}
+    - {fileID: 21300000, guid: 941c0db0cd36347398bda77553560348, type: 3}
     matchPairs:
     - leftIndex: 0
-      rightIndex: 3
-    - leftIndex: 1
       rightIndex: 4
-    - leftIndex: 2
-      rightIndex: 5
-  - answers:
-    - En
-    - To
-    - Tre
-    - 1
-    - 2
-    - 3
-    matchPairs:
-    - leftIndex: 0
-      rightIndex: 3
     - leftIndex: 1
-      rightIndex: 4
+      rightIndex: 3
     - leftIndex: 2
       rightIndex: 5

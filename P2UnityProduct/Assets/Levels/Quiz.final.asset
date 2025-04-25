@@ -15,8 +15,8 @@ MonoBehaviour:
   questions:
   - questionText: "Hvad kan du bruge til nemt at m\xE5le, hvor lang en tr\xE5d du
       skal bruge?"
-    image: {fileID: 0}
-    videoClip: {fileID: 32900000, guid: 2f0261d8001b1e6418d0785d751342f9, type: 3}
+    image: {fileID: 21300000, guid: 8b2ddb925cdc74e32b66f31fa4168968, type: 3}
+    videoClip: {fileID: 0}
     answers:
     - Din arm
     - En lineal
@@ -24,7 +24,7 @@ MonoBehaviour:
     - En blyant
     correctAnswerIndex: 1
   - questionText: "Hvordan kan en tandstikker hj\xE6lpe, n\xE5r du syr en knap p\xE5?"
-    image: {fileID: 21300000, guid: 4c9beb75e061b6542af27b9e0cf672ca, type: 3}
+    image: {fileID: 21300000, guid: 480701e72c30f42fb9bdc77c7f274eaa, type: 3}
     videoClip: {fileID: 0}
     answers:
     - "Den holder tr\xE5den p\xE5 plads"
@@ -33,7 +33,7 @@ MonoBehaviour:
     - "Den g\xF8r tr\xE5den st\xE6rkere"
     correctAnswerIndex: 2
   - questionText: "Hvor mange gange skal du stikke tr\xE5den igennem knappehullerne"
-    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
+    image: {fileID: 21300000, guid: 84f75c339be4f4237a904065365f89c3, type: 3}
     videoClip: {fileID: 0}
     answers:
     - 32 gange
@@ -42,7 +42,7 @@ MonoBehaviour:
     - 16 gange
     correctAnswerIndex: 4
   - questionText: "Hvilken n\xE5l er bedst til tyndt stof?"
-    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
+    image: {fileID: 21300000, guid: 4c9beb75e061b6542af27b9e0cf672ca, type: 3}
     videoClip: {fileID: 0}
     answers:
     - "En stump n\xE5l"
@@ -60,7 +60,7 @@ MonoBehaviour:
     - Et sting, du bruger til at sy knapper
     correctAnswerIndex: 2
   - questionText: "Hvad er vigtigt at huske, n\xE5r du afslutter syningen?"
-    image: {fileID: 21300000, guid: f9b4a5b074e1aa543aaa8c294f1a814b, type: 3}
+    image: {fileID: 21300000, guid: 5f40b9fc134da4dc89a417ea14a825e0, type: 3}
     videoClip: {fileID: 0}
     answers:
     - Klip stoffet
