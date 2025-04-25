@@ -12,6 +12,7 @@ public class MatchUI : MonoBehaviour {
     [SerializeField] private Button backButton;
     [SerializeField] private Button[] buttons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
+    [SerializeField] private Image[] answerImages;
 
     private MatchLevelSO.Question currentQuestion;
     private int currentQuestionIndex = 0;
@@ -67,7 +68,18 @@ public class MatchUI : MonoBehaviour {
         currentQuestion = matchData.questions[index];
 
         for (int i = 0; i < answerTexts.Length; i++){
-            answerTexts[i].text = currentQuestion.answers[i];
+            if (currentQuestion.answerTexts[i] != ""){
+                answerTexts[i].gameObject.SetActive(true);
+                answerTexts[i].text = currentQuestion.answerTexts[i];
+                answerImages[i].gameObject.SetActive(false);
+            } else if (currentQuestion.answerImages[i] != null){
+                answerImages[i].gameObject.SetActive(true);
+                answerImages[i].sprite = currentQuestion.answerImages[i];
+                answerTexts[i].gameObject.SetActive(false);
+            } else {
+                Debug.LogError("Question not set-up");
+                return;
+            }
             buttons[i].interactable = true;
             buttons[i].GetComponentInChildren<Image>().color = Color.white;
         }

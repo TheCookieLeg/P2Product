@@ -13,13 +13,20 @@ MonoBehaviour:
   m_Name: MatchTest
   m_EditorClassIdentifier: 
   questions:
-  - answers:
+  - answerTexts:
     - 1
     - 2
     - 3
-    - One
-    - Two
-    - Three
+    - 
+    - 
+    - 
+    answerImages:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 21300000, guid: 49ac6642c8db1b7498e00b4a34998299, type: 3}
+    - {fileID: 21300000, guid: 49d3e2ae506a6664480d0bd48598c8b3, type: 3}
+    - {fileID: 21300000, guid: 3e11e2ac66faf6645933cf4458dd7ffc, type: 3}
     matchPairs:
     - leftIndex: 0
       rightIndex: 3
@@ -27,13 +34,20 @@ MonoBehaviour:
       rightIndex: 4
     - leftIndex: 2
       rightIndex: 5
-  - answers:
-    - En
-    - To
-    - Tre
-    - 1
-    - 2
-    - 3
+  - answerTexts:
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    answerImages:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     matchPairs:
     - leftIndex: 0
       rightIndex: 3

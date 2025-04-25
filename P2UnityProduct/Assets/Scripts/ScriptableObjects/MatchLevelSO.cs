@@ -13,7 +13,8 @@ public class MatchLevelSO : BaseLevelSO {
 
     [System.Serializable]
     public class Question{
-        public string[] answers = new string[6];
+        public string[] answerTexts = new string[6];
+        public Sprite[] answerImages = new Sprite[6];
         public List<MatchPair> matchPairs = new List<MatchPair>(3);
     }
 
