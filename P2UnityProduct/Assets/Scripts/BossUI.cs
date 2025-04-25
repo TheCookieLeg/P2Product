@@ -37,6 +37,7 @@ public class BossUI : MonoBehaviour {
         });
         confirmButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
+            SaveImage();
             StopCamera();
             anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
@@ -52,6 +53,11 @@ public class BossUI : MonoBehaviour {
             cameraScreen.SetActive(true); 
             StartCamera();   
         });
+    }
+
+    private void SaveImage(){
+        FormatCameraTexture(webcam, GameManager.Instance.picture1, cameraPreviewSize);
+        GameManager.Instance.picture1.texture = photo;
     }
 
     private void Start(){

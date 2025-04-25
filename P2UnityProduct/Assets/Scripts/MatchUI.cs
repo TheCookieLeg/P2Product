@@ -54,6 +54,7 @@ public class MatchUI : MonoBehaviour {
         matchData = GameManager.Instance.currentLevelData as MatchLevelSO;
         currentQuestionIndex = 0;
 
+        GameManager.Instance.stars = 3;
         starsText.text = GameManager.Instance.stars.ToString();
 
         Show();

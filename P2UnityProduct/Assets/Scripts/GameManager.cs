@@ -27,13 +27,17 @@ public class GameManager : MonoBehaviour {
 
     private int currentLevelID;
     [HideInInspector] public int levelsCompleted;
-    [HideInInspector] public int stars;
+    public int stars;
 
     [HideInInspector] public int hoverLevelID;
     [HideInInspector] public int hoverStars;
     private BaseLevelSO hoverLevelData;
 
     [HideInInspector] public float canClickTimer;
+
+    public RawImage picture1; // display area for picture taken
+    public RawImage picture2; // display area for picture taken
+    public RawImage picture3; // display area for picture taken
 
     private void Awake(){
         if (Instance != null && Instance != this){
