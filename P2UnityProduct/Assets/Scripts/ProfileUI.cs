@@ -9,8 +9,8 @@ public class ProfileUI : MonoBehaviour {
 
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backButton;
+    [SerializeField] private Button trophiesButton;
     [SerializeField] private TextMeshProUGUI starsText;
-    [SerializeField] private TextMeshProUGUI streakText;
     private Animator anim;
 
     private void Awake(){
@@ -27,8 +27,11 @@ public class ProfileUI : MonoBehaviour {
             Invoke("Hide", 0.6f);
         });
 
+        trophiesButton.onClick.AddListener(() => {
+            GameManager.Instance.EnterTrophies();
+        });
+
         starsText.text = GameManager.Instance.GetTotalStars().ToString();
-        streakText.text = "0";
     }
 
     private void Start(){

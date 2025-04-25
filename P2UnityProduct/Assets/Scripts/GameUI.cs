@@ -92,7 +92,7 @@ public class GameUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        if (GameManager.Instance.currentLevelData is not GameLevelSO) return;
+        if (GameManager.Instance.currentLevelGameData == null) return;
 
         score = 0;
         scoreText.text = score + "/" + scorers.Length;

@@ -12,7 +12,6 @@ public class MatchUI : MonoBehaviour {
     [SerializeField] private Button backButton;
     [SerializeField] private Button[] buttons;
     [SerializeField] private TextMeshProUGUI[] answerTexts;
-    [SerializeField] private Image[] answerImages;
 
     private MatchLevelSO.Question currentQuestion;
     private int currentQuestionIndex = 0;
@@ -49,9 +48,9 @@ public class MatchUI : MonoBehaviour {
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
-        if (GameManager.Instance.currentLevelData is not MatchLevelSO) return;
+        if (GameManager.Instance.currentLevelMatchData == null) return;
 
-        matchData = GameManager.Instance.currentLevelData as MatchLevelSO;
+        matchData = GameManager.Instance.currentLevelMatchData;
         currentQuestionIndex = 0;
 
         starsText.text = GameManager.Instance.stars.ToString();
@@ -68,18 +67,7 @@ public class MatchUI : MonoBehaviour {
         currentQuestion = matchData.questions[index];
 
         for (int i = 0; i < answerTexts.Length; i++){
-            if (currentQuestion.answerTexts[i] != ""){
-                answerTexts[i].gameObject.SetActive(true);
-                answerTexts[i].text = currentQuestion.answerTexts[i];
-                answerImages[i].gameObject.SetActive(false);
-            } else if (currentQuestion.answerImages[i] != null){
-                answerImages[i].gameObject.SetActive(true);
-                answerImages[i].sprite = currentQuestion.answerImages[i];
-                answerTexts[i].gameObject.SetActive(false);
-            } else {
-                Debug.LogError("Question not set-up");
-                return;
-            }
+            answerTexts[i].text = currentQuestion.answers[i];
             buttons[i].interactable = true;
             buttons[i].GetComponentInChildren<Image>().color = Color.white;
         }
