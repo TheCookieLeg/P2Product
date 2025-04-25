@@ -35,9 +35,9 @@ public class GameManager : MonoBehaviour {
 
     [HideInInspector] public float canClickTimer;
 
-    public RawImage picture1; // display area for picture taken
-    public RawImage picture2; // display area for picture taken
-    public RawImage picture3; // display area for picture taken
+    public Texture2D picture1; // display area for picture taken
+    public Texture2D picture2; // display area for picture taken
+    public Texture2D picture3; // display area for picture taken
 
     private void Awake(){
         if (Instance != null && Instance != this){

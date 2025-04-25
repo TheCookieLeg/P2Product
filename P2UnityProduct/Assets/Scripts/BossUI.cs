@@ -24,7 +24,9 @@ public class BossUI : MonoBehaviour {
     private bool showingPicture = false;
     
     private Animator anim;
-    private Texture2D photo = null;
+    public Texture2D photo = null;
+
+    private float webcamRotation;
 
     private void Awake(){
         anim = GetComponent<Animator>();
@@ -38,7 +40,7 @@ public class BossUI : MonoBehaviour {
         confirmButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
             SaveImage();
-            StopCamera();
+            //StopCamera();
             anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
         });
@@ -56,8 +58,13 @@ public class BossUI : MonoBehaviour {
     }
 
     private void SaveImage(){
-        FormatCameraTexture(webcam, GameManager.Instance.picture1, cameraPreviewSize);
-        GameManager.Instance.picture1.texture = photo;
+        if (GameManager.Instance.picture1 == null){
+            GameManager.Instance.picture1 = photo;
+        } else if (GameManager.Instance.picture2 == null){
+            GameManager.Instance.picture2 = photo;
+        } else {
+            GameManager.Instance.picture3 = photo;
+        }
     }
 
     private void Start(){
@@ -71,7 +78,7 @@ public class BossUI : MonoBehaviour {
 
     private void Update(){   
         if (webcam != null) {
-            FormatCameraTexture(webcam, image, cameraPreviewSize);
+            FormatCameraTexture(image, cameraPreviewSize);
         }
     }
 
@@ -126,16 +133,17 @@ public class BossUI : MonoBehaviour {
         takePictureButton.gameObject.SetActive(false);
         pictureButtonsParent.SetActive(true);
 
-        FormatCameraTexture(webcam, pictureTakenDisplay, cameraPreviewSize);
+        webcamRotation = -webcam.videoRotationAngle;
+        FormatCameraTexture(pictureTakenDisplay, cameraPreviewSize);
         pictureTakenDisplay.texture = photo;
         pictureTakenDisplay.gameObject.SetActive(true);
         StopCamera();
     }
 
-    private void FormatCameraTexture(WebCamTexture webcam, RawImage image, Vector2 size) {
+    private void FormatCameraTexture(RawImage image, Vector2 size) {
         // Rotate image to show correct orientation 
         Vector3 rotationVector = new Vector3(0f, 0f, 0f);
-        rotationVector.z = -webcam.videoRotationAngle;
+        rotationVector.z = webcamRotation;
         image.rectTransform.localEulerAngles = rotationVector;
 
         // resize image are to fit new rotation (rotate 2d vector formula)
