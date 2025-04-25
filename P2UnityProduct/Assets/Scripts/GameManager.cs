@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour {
         if (canClickTimer > 0) canClickTimer -= Time.deltaTime;
     }
 
-  public void EnterLevel(){
+    public void EnterLevel(){
         currentLevelID = hoverLevelID;
 
         if (hoverLevelData is QuizLevelSO quizData){
