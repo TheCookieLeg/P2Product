@@ -48,7 +48,6 @@ public class BossUI : MonoBehaviour {
             RetakePicture();
         // enables camera page/screen
         });
-        // enables camera page/screen
         openCameraScreenButton.onClick.AddListener(() => {
             cameraScreen.SetActive(true);    
         });
