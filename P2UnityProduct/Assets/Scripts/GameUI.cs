@@ -112,7 +112,7 @@ public class GameUI : MonoBehaviour {
 
         for (int i = 0; i < fabrics.Length; i++){
             Vector3 position = new Vector3((i * 2) - 2, 0, 0);
-            fabrics[i].transform.position = position;
+            fabrics[i].transform.localPosition = position;
         }
 
         float startX = -1f;
