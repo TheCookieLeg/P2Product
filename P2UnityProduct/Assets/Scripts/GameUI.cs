@@ -21,6 +21,7 @@ public class GameUI : MonoBehaviour {
     private bool gameStarted = false;
 
     private Animator anim;
+    private List<float> realScorerXs;
 
     private void Awake(){
         anim = GetComponent<Animator>();
@@ -41,8 +42,16 @@ public class GameUI : MonoBehaviour {
         if (!gameStarted) return;
 
         if (scorers[score].transform.position.x < -2.7f){
+            int incrementedValue = 1;
+            if (score == 2 || score == 6 || score == 10 || score == 14 || score == 18 || score == 22 || score == 26 || score == 30 || score == 34){
+                incrementedValue = 4;
+            }
 
-            if (score + 2 >= scorers.Length){
+            if (score == 3 || score == 7 || score == 11 || score == 15 || score == 19 || score == 23 || score == 27 || score == 31 || score == 35){
+                incrementedValue = 5;
+            }
+
+            if (score + incrementedValue >= scorers.Length){
                 scoreText.text = scorers.Length + "/" + scorers.Length;
                 scoreText.GetComponent<Animator>().SetTrigger("Pulse");
                 gameStarted = false;
@@ -50,10 +59,10 @@ public class GameUI : MonoBehaviour {
                 anim.SetTrigger("End");
                 Invoke("Hide", 0.5f);
             } else {
-                score += 2;
+                score += incrementedValue;
                 scoreText.text = score + "/" + scorers.Length;
                 scoreText.GetComponent<Animator>().SetTrigger("Pulse");
-                scorers[score - 2].SetActive(false);
+                scorers[score - incrementedValue].SetActive(false);
                 scorers[score].SetActive(true);
             }
 
@@ -107,17 +116,54 @@ public class GameUI : MonoBehaviour {
             fabrics[i].transform.position = position;
         }
 
-        for (int i = 0; i < scorers.Length; i++){
-            float positionX = 0;
+        float startX = -1f;
+        float forwardStep = 4f;  // big step forward
+        float backStep = 2f;     // step back
+        float ySpacing = 1.5f;     // mid scorer vertical spacing
 
-            if (i % 2 == 0){
-                positionX = i - 1;
+        realScorerXs = new List<float>();
+
+        float currentX = startX;
+        bool moveForward = true;
+
+        // First, calculate all real scorer X positions
+        for (int i = 0; i < scorers.Length; i += 2){
+            realScorerXs.Add(currentX);
+
+            if (moveForward){
+                currentX += forwardStep;
             } else {
-                positionX = i + 2;
+                currentX -= backStep;
             }
 
-            float offset = 0;
-            Vector3 position = new Vector3(positionX + offset, 0, 0);
+            moveForward = !moveForward;
+        }
+        
+        for (int i = 0; i < scorers.Length; i++){
+            float positionX = 0;
+            float positionY = 0;
+
+            if (i % 2 == 0){
+                // Real scorers
+                positionX = realScorerXs[i / 2];
+                positionY = 0;
+            } else {
+                // Mid scorers between real scorers
+                int midIndex = (i - 1) / 2;
+
+                if (midIndex + 1 < realScorerXs.Count){
+                    float leftRealX = realScorerXs[midIndex];
+                    float rightRealX = realScorerXs[midIndex + 1];
+
+                    positionX = (leftRealX + rightRealX) / 2f;
+                    positionY = (midIndex % 2 == 0) ? ySpacing : -ySpacing;
+                } else {
+                    positionX = realScorerXs[midIndex];
+                    positionY = 0;
+                }
+            }
+
+            Vector3 position = new Vector3(positionX, positionY, 0);
             scorers[i].transform.localPosition = position;
             scorers[i].SetActive(i < 1);
         }
