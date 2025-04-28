@@ -17,7 +17,7 @@ public class BossUI : MonoBehaviour {
     [SerializeField] private RawImage image; // display area for camera output
     [SerializeField] private RawImage pictureTakenDisplay; // display area for picture taken
     [SerializeField] private Vector2 cameraPreviewSize = new Vector2(3,4) * 300;
-    [SerializeField] private Button openCameraScreenButton;
+    // [SerializeField] private Button openCameraScreenButton;
     [SerializeField] private GameObject cameraScreen;
 
     private WebCamTexture webcam = null;
@@ -51,10 +51,10 @@ public class BossUI : MonoBehaviour {
             RetakePicture();
         // enables camera page/screen
         });
-        openCameraScreenButton.onClick.AddListener(() => {
-            cameraScreen.SetActive(true); 
-            StartCamera();   
-        });
+        // openCameraScreenButton.onClick.AddListener(() => {
+        //     cameraScreen.SetActive(true); 
+        //     StartCamera();   
+        // });
     }
 
     private void SaveImage(){
@@ -86,8 +86,6 @@ public class BossUI : MonoBehaviour {
         if (GameManager.Instance.currentLevelData is not BossLevelSO) return;
 
         Show();
-
-        cameraScreen.SetActive(false);
     }
 
     private void StartCamera() {
@@ -187,5 +185,6 @@ public class BossUI : MonoBehaviour {
 
     private void Show(){
         gameObject.SetActive(true);
+        StartCamera();
     }
 }

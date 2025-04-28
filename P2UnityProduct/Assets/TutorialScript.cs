@@ -9,17 +9,26 @@ using UnityEngine.Video;
 
 public class TutorialScript : MonoBehaviour
 {
+    [SerializeField] Button backButton;
+
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI descriptionText;
     [SerializeField] TextMeshProUGUI buttonText;
 
-    public String[] quizText = new String[3] {"Quiz level","Vælg den korrekte svarmulighed","Start quiz"};
-    public String[] matchText = new String[3] {"Match level","Tryk på den tekst der matcher til billedet","Fortsæt"};
-    public String[] storyText = new String[3] {"Story level","Tryk på billederne i den korrekte rækkefølge","Fortsæt"};
-    public String[] gameText = new String[3] {"Game level","Lær at sy bagsting gennem et spil.","Fortsæt"};
-    public String[] bossText = new String[3] {"Boss level","test","Fortsæt"};
+    private String[] quizText = new String[3] {$"Quiz level","Vælg den korrekte svarmulighed","Start quiz"};
+    private String[] matchText = new String[3] {$"Match level","Tryk på den tekst der matcher til billedet","Fortsæt"};
+    private String[] storyText = new String[3] {$"Story level","Tryk på billederne i den korrekte rækkefølge","Fortsæt"};
+    private String[] gameText = new String[3] {$"Game level","Lær at sy bagsting gennem et spil.","Fortsæt"};
+    private String[] bossText = new String[3] {$"Boss level","Som den sidste opgave i dette forløb, skal du bruge hvad du har lært, og lappe 2 stykker tøj sammen. \n\n Hvad du skal bruge: \n- Nål \n- 20cm tråd \n- 2 stykker stof  \n\nNår du har færdiggjort opgaven, kan du gå videre til næste side!","Fortsæt"};
 
-
+	private void Awake()
+	{
+		backButton.onClick.AddListener(() => {
+            GameManager.Instance.BackToGameScene();
+            // anim.SetTrigger("End");
+            Invoke("Hide", 0.5f);
+        });
+	}
 	private void GameManager_OnEnterTurorial(object sender, EventArgs e){
         String[] tutorialText = new String[3];
 
