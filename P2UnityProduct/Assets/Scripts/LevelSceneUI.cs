@@ -28,7 +28,7 @@ public class LevelSceneUI : MonoBehaviour {
         GameManager.Instance.OnLeaveLevel += GameManager_OnLeaveLevel;
 
         startButton.onClick.AddListener(() => {
-            GameManager.Instance.EnterLevel();
+            GameManager.Instance.EnterTutorial();
             anim.SetTrigger("End");
         });
         backButton.onClick.AddListener(() => {

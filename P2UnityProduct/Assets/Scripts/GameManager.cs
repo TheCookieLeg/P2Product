@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance { get; private set; }
 
+    public event EventHandler OnEnterTutorial;
     public event EventHandler OnEnterLevel;
     public event EventHandler OnExitToGameScene;
     public event EventHandler OnRefreshLevels;
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnLeaveLevel;
     public event EventHandler OnLeaveThread;
     public event EventHandler OnResetSave;
+    public event EventHandler OnEnterTurorial;
 
     [SerializeField] [Range(0.5f, 1.5f)] private float transmissionTid = 1f;
     [SerializeField] private Animator transmissionAnim;
@@ -54,8 +56,7 @@ public class GameManager : MonoBehaviour {
     private void Update(){
         if (canClickTimer > 0) canClickTimer -= Time.deltaTime;
     }
-
-    public void EnterLevel(){
+    public void EnterTutorial(){
         currentLevelID = hoverLevelID;
 
         if (hoverLevelData is QuizLevelSO quizData){
@@ -73,6 +74,10 @@ public class GameManager : MonoBehaviour {
             Debug.LogWarning("Level type not found");
         }
 
+        OnEnterTurorial?.Invoke(this, EventArgs.Empty);
+        // OnEnterLevel?.Invoke(this, EventArgs.Empty);
+    }
+    public void EnterLevel(){
         OnEnterLevel?.Invoke(this, EventArgs.Empty);
     }
 
