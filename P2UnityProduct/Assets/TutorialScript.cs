@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 public class TutorialScript : MonoBehaviour
 {
@@ -14,6 +10,7 @@ public class TutorialScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI descriptionText;
     [SerializeField] TextMeshProUGUI buttonText;
+    private Animator anim;
 
     private String[] quizText = new String[3] {$"Quiz level","Vælg den korrekte svarmulighed","Start quiz"};
     private String[] matchText = new String[3] {$"Match level","Tryk på den tekst der matcher til billedet","Fortsæt"};
@@ -23,9 +20,11 @@ public class TutorialScript : MonoBehaviour
 
 	private void Awake()
 	{
+        anim = GetComponent<Animator>();
+
 		backButton.onClick.AddListener(() => {
             GameManager.Instance.BackToGameScene();
-            // anim.SetTrigger("End");
+            anim.SetTrigger("End");
             Invoke("Hide", 0.5f);
         });
 	}
@@ -58,6 +57,7 @@ public class TutorialScript : MonoBehaviour
         buttonText.SetText(tutorialText[2]);
 
         Show();
+        anim.SetTrigger("Start");
     }
     public void ContinueToLevel() {
         GameManager.Instance.EnterLevel();
@@ -65,18 +65,18 @@ public class TutorialScript : MonoBehaviour
     } 
 
     private void Show() {
-        gameObject.SetActive(true);        
+        gameObject.SetActive(true);
     }
     private void Hide(){
         gameObject.SetActive(false);
     }
 
     private void Start(){
-        GameManager.Instance.OnEnterTurorial += GameManager_OnEnterTurorial;
+        GameManager.Instance.OnEnterTutorial += GameManager_OnEnterTurorial;
         Hide();
     }
     private void OnDestroy(){
-        GameManager.Instance.OnEnterTurorial -= GameManager_OnEnterTurorial;
+        GameManager.Instance.OnEnterTutorial -= GameManager_OnEnterTurorial;
     }
     
 }

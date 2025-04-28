@@ -26,6 +26,7 @@ public class LevelSceneUI : MonoBehaviour {
         GameManager.Instance.OnHoverLevel += GameManager_OnHoverLevel;
         GameManager.Instance.OnEnterThread += GameManager_OnEnterThread;
         GameManager.Instance.OnLeaveLevel += GameManager_OnLeaveLevel;
+        GameManager.Instance.OnEnterTutorial += GameManager_OnEnterTutorial;
 
         startButton.onClick.AddListener(() => {
             GameManager.Instance.EnterTutorial();
@@ -51,6 +52,7 @@ public class LevelSceneUI : MonoBehaviour {
         GameManager.Instance.OnHoverLevel -= GameManager_OnHoverLevel;
         GameManager.Instance.OnEnterThread -= GameManager_OnEnterThread;
         GameManager.Instance.OnLeaveLevel -= GameManager_OnLeaveLevel;
+        GameManager.Instance.OnEnterTutorial -= GameManager_OnEnterTutorial;
     }
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
@@ -70,6 +72,10 @@ public class LevelSceneUI : MonoBehaviour {
 
     private void GameManager_OnLeaveLevel(object sender, EventArgs e){
         Hide();
+    }
+
+    private void GameManager_OnEnterTutorial(object sender, EventArgs e){
+        Invoke("Hide", 0.5f);
     }
 
     private void GameManager_OnHoverLevel(object sender, EventArgs e){

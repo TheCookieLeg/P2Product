@@ -109,7 +109,6 @@ public class GameUI : MonoBehaviour {
         starsText.text = GameManager.Instance.stars.ToString();
 
         Show();
-        anim.SetTrigger("Needle Start");
 
         for (int i = 0; i < fabrics.Length; i++){
             Vector3 position = new Vector3((i * 2) - 2, 0, 0);
