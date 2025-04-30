@@ -38,7 +38,7 @@ public class BossUI : MonoBehaviour {
             Invoke("Hide", 0.5f);
         });
         confirmButton.onClick.AddListener(() => {
-            GameManager.Instance.BackToGameScene();
+            GameManager.Instance.CompleteLevel();
             SaveImage();
             //StopCamera();
             anim.SetTrigger("End");
@@ -84,6 +84,9 @@ public class BossUI : MonoBehaviour {
 
     private void GameManager_OnEnterLevel(object sender, EventArgs e){
         if (GameManager.Instance.currentLevelData is not BossLevelSO) return;
+
+        GameManager.Instance.stars = 3;
+        webcamRotation = -webcam.videoRotationAngle;
 
         Show();
     }
