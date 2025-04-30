@@ -51,7 +51,7 @@ public class StoryUI : MonoBehaviour {
         if (GameManager.Instance.currentLevelData is not StoryLevelSO) return;
 
         currentImageIndex = 0;
-        vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
+        vælgBilledText.text = BilledtextFraIndex(currentImageIndex);
 
         storyData = GameManager.Instance.currentLevelData as StoryLevelSO;
         currentQuestionIndex = 0;
@@ -148,13 +148,13 @@ public class StoryUI : MonoBehaviour {
         imageComponents[1].color = endColor;
 
         currentImageIndex++;
-        vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
-
+        vælgBilledText.text = BilledtextFraIndex(currentImageIndex);
+        
         if (currentImageIndex >= currentQuestion.answers.Length){
             if (currentQuestionIndex < storyData.questions.Count - 1){
                 currentQuestionIndex++;
                 currentImageIndex = 0;
-                vælgBilledText.text = "Vælg billed " + (currentImageIndex + 1);
+                BilledtextFraIndex(currentImageIndex);
                 LoadQuestion(currentQuestionIndex);
             } else {
                 GameManager.Instance.CompleteLevel();
@@ -162,6 +162,41 @@ public class StoryUI : MonoBehaviour {
                 Invoke("Hide", 0.5f);
             }
         }
+    }
+
+    private string BilledtextFraIndex(int index) {
+        string billedText;
+        switch (index) {
+            case 0:
+                billedText = "Mål tråden op";
+                break;
+            case 1:
+                billedText = "Før nålen gannem stoffets bagside";
+                break;
+            case 2:
+                billedText = "Før nålen gennem stoffet, så det danner et 'x'";
+                break;
+            case 3:
+                billedText = "Placer knappen på stoffet, og før nålen gennem et hul";
+                break;
+            case 4:
+                billedText = "Før nålen tilbage gennem et modstående hul";
+                break;
+            case 5:
+                billedText = "Gentag for resterende huller";
+                break;
+            case 6:
+                billedText = "Lav en stilk under knappen";
+                break;
+            case 7:
+                billedText = "Bind knude på bagsiden af stoffet";
+                break;
+            default:
+                billedText = "Vælg det korrekte billede";
+                break;
+        }
+    
+        return billedText;
     }
 
     private bool IsAnswerCorrect(int selectedIndex){
