@@ -18,6 +18,7 @@ public class ProfileUI : MonoBehaviour {
     [SerializeField] private Button picture2Button;
     [SerializeField] private Button picture3Button;
     [SerializeField] private Button overlayBackButton;
+    [SerializeField] private Button completeEverythingButton;
     [SerializeField] private GameObject overlay;
     [SerializeField] private RawImage cameraOutput;
     private Animator anim;
@@ -51,6 +52,9 @@ public class ProfileUI : MonoBehaviour {
         });
         overlayBackButton.onClick.AddListener(() => {
             overlay.SetActive(false);
+        });
+        completeEverythingButton.onClick.AddListener(() => {
+            GameManager.Instance.CompleteEverything();
         });
 
         starsText.text = GameManager.Instance.GetTotalStars().ToString();

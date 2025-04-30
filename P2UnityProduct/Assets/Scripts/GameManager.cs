@@ -116,6 +116,10 @@ public class GameManager : MonoBehaviour {
         OnRefreshLevels?.Invoke(this, EventArgs.Empty);
     }
 
+    public void CompleteEverything(){
+        //levelsCompleted;
+    }
+
     public void HoverLevel(int levelID, BaseLevelSO levelData){
         hoverLevelID = levelID;
         hoverLevelData = levelData;
