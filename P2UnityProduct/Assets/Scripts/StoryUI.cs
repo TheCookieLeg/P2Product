@@ -165,38 +165,26 @@ public class StoryUI : MonoBehaviour {
     }
 
     private string BilledtextFraIndex(int index) {
-        string billedText;
         switch (index) {
             case 0:
-                billedText = "Mål tråden op";
-                break;
+                return "Mål tråden op";
             case 1:
-                billedText = "Før nålen gannem stoffets bagside";
-                break;
+                return "Før nålen gannem stoffets bagside";
             case 2:
-                billedText = "Før nålen gennem stoffet, så det danner et 'x'";
-                break;
+                return "Før nålen gennem stoffet, så det danner et 'x'";
             case 3:
-                billedText = "Placer knappen på stoffet, og før nålen gennem et hul";
-                break;
+                return "Placer knappen på stoffet, og før nålen gennem et hul";
             case 4:
-                billedText = "Før nålen tilbage gennem et modstående hul";
-                break;
+                return "Før nålen tilbage gennem et modstående hul";
             case 5:
-                billedText = "Syg gennem alle huller flere gange, så det danner et 'x'";
-                break;
+                return "Syg gennem alle huller flere gange, så det danner et 'x'";
             case 6:
-                billedText = "Lav en stilk ved at dreje tråden rundt under knappen et par gange";
-                break;
+                return "Lav en stilk ved at dreje tråden rundt under knappen et par gange";
             case 7:
-                billedText = "Før tråden på den anden side af stoffet, under knappen, og bind en knude på bagsiden";
-                break;
+                return "Før tråden på den anden side af stoffet, under knappen, og bind en knude på bagsiden";
             default:
-                billedText = "Vælg det korrekte billede";
-                break;
+                return "Vælg det korrekte billede";
         }
-    
-        return billedText;
     }
 
     private bool IsAnswerCorrect(int selectedIndex){
