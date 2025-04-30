@@ -154,7 +154,7 @@ public class StoryUI : MonoBehaviour {
             if (currentQuestionIndex < storyData.questions.Count - 1){
                 currentQuestionIndex++;
                 currentImageIndex = 0;
-                BilledtextFraIndex(currentImageIndex);
+                vælgBilledText.text = BilledtextFraIndex(currentImageIndex);
                 LoadQuestion(currentQuestionIndex);
             } else {
                 GameManager.Instance.CompleteLevel();
