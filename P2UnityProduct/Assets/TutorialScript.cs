@@ -16,7 +16,7 @@ public class TutorialScript : MonoBehaviour
     private String[] matchText = new String[3] {$"Match level","Tryk på den tekst der matcher til billedet","Fortsæt"};
     private String[] storyText = new String[3] {$"Story level","Tryk på billederne i den korrekte rækkefølge","Fortsæt"};
     private String[] gameText = new String[3] {$"Game level","Lær at sy bagsting gennem et spil.","Fortsæt"};
-    private String[] bossText = new String[3] {$"Boss level","Som den sidste opgave i dette forløb, skal du bruge hvad du har lært, og lappe 2 stykker tøj sammen. \n\n Hvad du skal bruge: \n- Nål \n- 20cm tråd \n- 2 stykker stof  \n\nNår du har færdiggjort opgaven, kan du gå videre til næste side!","Fortsæt"};
+    private String[] bossText = new String[3] {$"Boss level","Som den sidste opgave i dette forløb, skal du bruge hvad du har lært, og lappe 2 stykker tøj sammen, samt sy en knap på stoffet efter. \n\n Hvad du skal bruge: \n- Nål \n- passende længde tråd der skal lægges dobbelt \n- 2 stykker stof \n- en knap  \n\nNår du har færdiggjort opgaven, kan du gå videre til næste side!","Fortsæt"};
 
 	private void Awake()
 	{
