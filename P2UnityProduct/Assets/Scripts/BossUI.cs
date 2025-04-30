@@ -86,7 +86,6 @@ public class BossUI : MonoBehaviour {
         if (GameManager.Instance.currentLevelData is not BossLevelSO) return;
 
         GameManager.Instance.stars = 3;
-        webcamRotation = -webcam.videoRotationAngle;
 
         Show();
     }
@@ -144,7 +143,7 @@ public class BossUI : MonoBehaviour {
     private void FormatCameraTexture(RawImage image, Vector2 size) {
         // Rotate image to show correct orientation 
         Vector3 rotationVector = new Vector3(0f, 0f, 0f);
-        rotationVector.z = -webcam.videoRotationAngle;;
+        rotationVector.z = -webcam.videoRotationAngle;
         image.rectTransform.localEulerAngles = rotationVector;
 
         // resize image are to fit new rotation (rotate 2d vector formula)
