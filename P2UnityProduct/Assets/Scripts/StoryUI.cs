@@ -183,13 +183,13 @@ public class StoryUI : MonoBehaviour {
                 billedText = "Før nålen tilbage gennem et modstående hul";
                 break;
             case 5:
-                billedText = "Gentag for resterende huller";
+                billedText = "Syg gennem alle huller flere gange, så det danner et 'x'";
                 break;
             case 6:
-                billedText = "Lav en stilk under knappen";
+                billedText = "Lav en stilk ved at dreje tråden rundt under knappen et par gange";
                 break;
             case 7:
-                billedText = "Bind knude på bagsiden af stoffet";
+                billedText = "Før tråden på den anden side af stoffet, under knappen, og bind en knude på bagsiden";
                 break;
             default:
                 billedText = "Vælg det korrekte billede";
