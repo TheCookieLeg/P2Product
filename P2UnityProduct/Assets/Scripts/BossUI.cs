@@ -111,6 +111,7 @@ public class BossUI : MonoBehaviour {
         image.texture = webcam;
 
         webcam.Play();
+        FormatCameraTexture(image, cameraPreviewSize);
     }
 
     public void TakePicture() {
