@@ -63,12 +63,14 @@ public class ProfileUI : MonoBehaviour {
 
     private void Start(){
         GameManager.Instance.OnEnterProfile += GameManager_OnEnterProfile;
+        GameManager.Instance.OnRefreshLevels += GameManger_OnRefreshLevels;
 
         Hide();
     }
 
     private void OnDestroy(){
         GameManager.Instance.OnEnterProfile -= GameManager_OnEnterProfile;
+        GameManager.Instance.OnRefreshLevels -= GameManger_OnRefreshLevels;
     }
 
     private void GameManager_OnEnterProfile(object sender, EventArgs e){
@@ -90,6 +92,10 @@ public class ProfileUI : MonoBehaviour {
             picture3.texture = GameManager.Instance.picture3;
             picture3.color = Color.white;
         }
+    }
+
+    private void GameManger_OnRefreshLevels(object sender, EventArgs e){
+        starsText.text = GameManager.Instance.GetTotalStars().ToString();
     }
 
     private void Hide(){

@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public BaseLevelSO currentLevelData;
 
     private int currentLevelID;
-    [HideInInspector] public int levelsCompleted;
+    public int levelsCompleted;
     public int stars;
 
     [HideInInspector] public int hoverLevelID;
@@ -117,7 +117,18 @@ public class GameManager : MonoBehaviour {
     }
 
     public void CompleteEverything(){
-        //levelsCompleted;
+        levelsCompleted = 8;
+        PlayerPrefs.SetInt("LevelsCompleted", levelsCompleted);
+        PlayerPrefs.SetInt("Level" + 1 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 2 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 3 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 4 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 5 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 6 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 7 + "Stars", 1);
+        PlayerPrefs.SetInt("Level" + 8 + "Stars", 1);
+
+        OnRefreshLevels?.Invoke(this, EventArgs.Empty);
     }
 
     public void HoverLevel(int levelID, BaseLevelSO levelData){
