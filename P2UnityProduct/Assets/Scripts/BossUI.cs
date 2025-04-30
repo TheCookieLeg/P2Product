@@ -135,7 +135,6 @@ public class BossUI : MonoBehaviour {
         takePictureButton.gameObject.SetActive(false);
         pictureButtonsParent.SetActive(true);
 
-        webcamRotation = -webcam.videoRotationAngle;
         FormatCameraTexture(pictureTakenDisplay, cameraPreviewSize);
         pictureTakenDisplay.texture = photo;
         pictureTakenDisplay.gameObject.SetActive(true);
@@ -145,7 +144,7 @@ public class BossUI : MonoBehaviour {
     private void FormatCameraTexture(RawImage image, Vector2 size) {
         // Rotate image to show correct orientation 
         Vector3 rotationVector = new Vector3(0f, 0f, 0f);
-        rotationVector.z = webcamRotation;
+        rotationVector.z = -webcam.videoRotationAngle;;
         image.rectTransform.localEulerAngles = rotationVector;
 
         // resize image are to fit new rotation (rotate 2d vector formula)
